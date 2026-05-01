@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Login Page -->
     <div id="loginPage" class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
         <div class="w-full max-w-md">
             <div class="bg-white rounded-2xl shadow-2xl p-8 space-y-8">
@@ -47,9 +46,7 @@
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div id="dashboard" class="hidden min-h-screen bg-gray-50">
-        <!-- Navbar -->
         <nav class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-xl sticky top-0 z-40">
             <div class="px-6 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-4">
@@ -74,7 +71,6 @@
         </nav>
 
         <div class="flex">
-            <!-- Sidebar -->
             <aside class="w-64 bg-white shadow-lg h-[calc(100vh-70px)] overflow-y-auto sticky top-[70px]">
                 <nav class="p-6 space-y-2">
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-100 transition" data-page="dashboard">
@@ -104,10 +100,8 @@
                 </nav>
             </aside>
 
-            <!-- Main Content -->
             <main class="flex-1 overflow-y-auto h-[calc(100vh-70px)]">
                 <div class="p-8 max-w-7xl mx-auto">
-                    <!-- Dashboard Page -->
                     <div id="dashboard" class="page space-y-8">
                         <div>
                             <h2 class="text-4xl font-bold text-gray-900 mb-2">Dashboard</h2>
@@ -164,7 +158,6 @@
                         </div>
                     </div>
 
-                    <!-- Staff Management Page -->
                     <div id="staff" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -198,7 +191,6 @@
                         </div>
                     </div>
 
-                    <!-- Punishments Page -->
                     <div id="punishments" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -216,7 +208,6 @@
                         </div>
                     </div>
 
-                    <!-- Promotions Page -->
                     <div id="promotions" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -234,7 +225,6 @@
                         </div>
                     </div>
 
-                    <!-- Observations Page -->
                     <div id="observations" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -252,7 +242,6 @@
                         </div>
                     </div>
 
-                    <!-- Leave of Absence Page -->
                     <div id="loa" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -270,7 +259,6 @@
                         </div>
                     </div>
 
-                    <!-- Awards Page -->
                     <div id="awards" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -288,7 +276,6 @@
                         </div>
                     </div>
 
-                    <!-- Activity Log Page -->
                     <div id="activitylog" class="page hidden space-y-6">
                         <div>
                             <h2 class="text-4xl font-bold text-gray-900">Activity Log</h2>
@@ -302,7 +289,6 @@
                         </div>
                     </div>
 
-                    <!-- Staff Detail Page -->
                     <div id="staffDetail" class="page hidden">
                         <div id="staffDetailContent"></div>
                     </div>
@@ -311,9 +297,6 @@
         </div>
     </div>
 
-    <!-- Modals -->
-
-    <!-- Add/Edit Staff Modal -->
     <div id="staffModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 flex items-center justify-between">
@@ -395,7 +378,6 @@
         </div>
     </div>
 
-    <!-- Add Punishment Modal -->
     <div id="punishmentModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-red-600 to-red-700 text-white p-6 flex items-center justify-between">
@@ -447,7 +429,6 @@
         </div>
     </div>
 
-    <!-- Add Promotion Modal -->
     <div id="promotionModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex items-center justify-between">
@@ -515,7 +496,6 @@
         </div>
     </div>
 
-    <!-- Add Observation Modal -->
     <div id="observationModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 flex items-center justify-between">
@@ -570,7 +550,6 @@
         </div>
     </div>
 
-    <!-- Add LOA Modal -->
     <div id="loaModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white p-6 flex items-center justify-between">
@@ -626,7 +605,6 @@
         </div>
     </div>
 
-    <!-- Add Award Modal -->
     <div id="awardModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-amber-600 to-amber-700 text-white p-6 flex items-center justify-between">
@@ -691,7 +669,7 @@
         let editingStaffId = null;
 
         function initSupabase() {
-            if (!SUPABASE_URL.includes('YOUR_SUPABASE')) {
+            if (SUPABASE_URL && SUPABASE_KEY) {
                 sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 console.log('✅ Supabase initialized');
                 return true;
@@ -922,13 +900,13 @@
                             <td class="px-6 py-4 text-gray-700">${member.department}</td>
                             <td class="px-6 py-4 text-gray-700 text-sm">${member.subjects || '-'}</td>
                             <td class="px-6 py-4 space-x-2">
-                                <button onclick="viewStaffDetail(${member.id})" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
+                                <button onclick="viewStaffDetail('${member.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
                                     <i class="fas fa-eye"></i> View
                                 </button>
-                                <button onclick="editStaff(${member.id})" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
+                                <button onclick="editStaff('${member.id}')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <button onclick="deleteStaff(${member.id})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm">
+                                <button onclick="deleteStaff('${member.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -1109,7 +1087,7 @@
                 return;
             }
 
-            const staffId = parseInt(document.getElementById('punishmentStaff').value);
+            const staffId = document.getElementById('punishmentStaff').value;
             const punishmentType = document.getElementById('punishmentType').value;
 
             try {
@@ -1120,8 +1098,7 @@
                     type: punishmentType,
                     reason: document.getElementById('punishmentReason').value,
                     date: document.getElementById('punishmentDate').value,
-                    notes: document.getElementById('punishmentNotes').value,
-                    recorded_by: currentUser
+                    notes: document.getElementById('punishmentNotes').value
                 }]);
 
                 if (error) throw error;
@@ -1182,7 +1159,7 @@
                                         <p class="text-gray-600 text-sm mt-1">${p.reason}</p>
                                         <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
                                     </div>
-                                    <button onclick="deletePunishment(${p.id})" class="text-red-600 hover:text-red-800">
+                                    <button onclick="deletePunishment('${p.id}')" class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -1223,7 +1200,7 @@
         document.getElementById('promotionStaff').addEventListener('change', async function () {
             if (!sbClient) return;
 
-            const staffId = parseInt(this.value);
+            const staffId = this.value;
             if (!staffId) return;
 
             try {
@@ -1250,7 +1227,7 @@
             }
 
             try {
-                const staffId = parseInt(document.getElementById('promotionStaff').value);
+                const staffId = document.getElementById('promotionStaff').value;
                 const newRole = document.getElementById('promotionNewRole').value;
                 const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
@@ -1259,8 +1236,7 @@
                     previous_role: document.getElementById('promotionPreviousRole').value,
                     new_role: newRole,
                     date: document.getElementById('promotionDate').value,
-                    reason: document.getElementById('promotionNotes').value,
-                    recorded_by: currentUser
+                    notes: document.getElementById('promotionNotes').value
                 }]);
 
                 if (promError) throw promError;
@@ -1309,11 +1285,11 @@
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
                                     <h3 class="text-xl font-bold text-gray-900">${member.full_name}</h3>
-                                    <p class="text-blue-600 font-semibold mt-2">${p.previous_role} <i class="fas fa-arrow-right"></i> ${p.new_role}</p>
-                                    <p class="text-gray-600 text-sm mt-2">${p.reason}</p>
+                                    <p class="text-blue-600 font-semibold mt-2">${p.previous_role || 'N/A'} <i class="fas fa-arrow-right"></i> ${p.new_role}</p>
+                                    <p class="text-gray-600 text-sm mt-2">${p.notes || ''}</p>
                                     <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
                                 </div>
-                                <button onclick="deletePromotion(${p.id})" class="text-red-600 hover:text-red-800">
+                                <button onclick="deletePromotion('${p.id}')" class="text-red-600 hover:text-red-800">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1362,7 +1338,7 @@
                 return;
             }
 
-            const staffId = parseInt(document.getElementById('observationStaff').value);
+            const staffId = document.getElementById('observationStaff').value;
             const rating = document.getElementById('observationRating').value;
 
             try {
@@ -1370,12 +1346,11 @@
 
                 const { error } = await sbClient.from('observations').insert([{
                     staff_id: staffId,
-                    observer: document.getElementById('observationObserver').value,
+                    observer_name: document.getElementById('observationObserver').value,
                     date: document.getElementById('observationDate').value,
                     rating: rating,
                     comments: document.getElementById('observationComments').value,
-                    action_items: document.getElementById('observationActionItems').value,
-                    recorded_by: currentUser
+                    action_items: document.getElementById('observationActionItems').value
                 }]);
 
                 if (error) throw error;
@@ -1438,10 +1413,10 @@
                                             <span class="px-2 py-1 bg-${ratingColor}-100 text-${ratingColor}-800 text-xs font-bold rounded">${o.rating}</span>
                                         </div>
                                         <p class="text-gray-600 text-sm mt-2">${o.comments}</p>
-                                        <p class="text-gray-500 text-xs mt-2"><strong>Observer:</strong> ${o.observer}</p>
+                                        <p class="text-gray-500 text-xs mt-2"><strong>Observer:</strong> ${o.observer_name || 'N/A'}</p>
                                         <p class="text-gray-500 text-xs"><strong>Date:</strong> ${o.date}</p>
                                     </div>
-                                    <button onclick="deleteObservation(${o.id})" class="text-red-600 hover:text-red-800">
+                                    <button onclick="deleteObservation('${o.id}')" class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -1492,7 +1467,7 @@
                 return;
             }
 
-            const staffId = parseInt(document.getElementById('loaStaff').value);
+            const staffId = document.getElementById('loaStaff').value;
             const loaType = document.getElementById('loaType').value;
 
             try {
@@ -1504,8 +1479,7 @@
                     start_date: document.getElementById('loaStartDate').value,
                     end_date: document.getElementById('loaEndDate').value,
                     reason: document.getElementById('loaReason').value,
-                    notes: document.getElementById('loaNotes').value,
-                    recorded_by: currentUser
+                    notes: document.getElementById('loaNotes').value
                 }]);
 
                 if (error) throw error;
@@ -1556,7 +1530,7 @@
                                     <p class="font-bold text-gray-900">${member?.full_name}</p>
                                     <p class="text-yellow-700 text-sm mt-1">${l.type} • ${l.start_date} to ${l.end_date}</p>
                                 </div>
-                                <button onclick="deleteLOA(${l.id})" class="text-red-600 hover:text-red-800">
+                                <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1578,7 +1552,7 @@
                                     <p class="font-bold text-gray-900">${member?.full_name}</p>
                                     <p class="text-blue-700 text-sm mt-1">${l.type} • ${l.start_date} to ${l.end_date}</p>
                                 </div>
-                                <button onclick="deleteLOA(${l.id})" class="text-red-600 hover:text-red-800">
+                                <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1629,7 +1603,7 @@
                 return;
             }
 
-            const staffId = parseInt(document.getElementById('awardStaff').value);
+            const staffId = document.getElementById('awardStaff').value;
             const awardType = document.getElementById('awardType').value;
 
             try {
@@ -1640,8 +1614,7 @@
                     type: awardType,
                     date: document.getElementById('awardDate').value,
                     reason: document.getElementById('awardReason').value,
-                    notes: document.getElementById('awardNotes').value,
-                    recorded_by: currentUser
+                    notes: document.getElementById('awardNotes').value
                 }]);
 
                 if (error) throw error;
@@ -1690,7 +1663,7 @@
                                     <p class="text-gray-600 text-sm mt-2">${a.reason}</p>
                                     <p class="text-gray-500 text-xs mt-2">Date: ${a.date}</p>
                                 </div>
-                                <button onclick="deleteAward(${a.id})" class="text-red-600 hover:text-red-800">
+                                <button onclick="deleteAward('${a.id}')" class="text-red-600 hover:text-red-800">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -1806,7 +1779,7 @@
                         <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
                             <div>
                                 <p class="font-semibold text-gray-900">[${log.module}] ${log.action}</p>
-                                <p class="text-gray-600 text-sm mt-1">${log.details}</p>
+                                <p class="text-gray-600 text-sm mt-1">${log.details || ''}</p>
                                 <p class="text-gray-500 text-xs mt-2"><strong>User:</strong> ${log.user_name} | <strong>Time:</strong> ${time}</p>
                             </div>
                         </div>
