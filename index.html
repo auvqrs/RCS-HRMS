@@ -30,18 +30,18 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input type="password" id="password" placeholder="Enter password"
+                        <input type="password" id="password" placeholder="Enter password (admin)"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none transition"
                             required>
                     </div>
                     <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-lg hover:shadow-lg transition transform hover:scale-105">
                         Login
                     </button>
-                    <div id="loginError" class="text-red-500 text-sm text-center hidden"></div>
+                    <div id="loginError" class="text-red-500 text-sm text-center"></div>
                 </form>
 
                 <p class="text-center text-gray-600 text-sm">
-                    <i class="fas fa-info-circle"></i> The system is <span class="font-mono font-bold">Confidential</span>
+                    <i class="fas fa-info-circle"></i> Password for all users: <span class="font-mono font-bold">admin</span>
                 </p>
             </div>
         </div>
@@ -106,7 +106,7 @@
 
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto h-[calc(100vh-70px)]">
-                <div class="p-8 max-w-7xl">
+                <div class="p-8 max-w-7xl mx-auto">
                     <!-- Dashboard Page -->
                     <div id="dashboard" class="page space-y-8">
                         <div>
@@ -361,25 +361,38 @@
                     <select id="staffDepartment" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" required>
                         <option value="">Select Department</option>
                         <optgroup label="TEACHING DEPARTMENTS">
-                            <option value="Core Subjects Department">Core Subjects Department</option>
-                            <option value="Humanities Department">Humanities Department</option>
-                            <option value="Languages Department">Languages Department</option>
-                            <option value="Creative Arts Department">Creative Arts Department</option>
-                            <option value="Technology Department">Technology Department</option>
-                            <option value="Social Sciences Department">Social Sciences Department</option>
-                            <option value="PE Department">PE Department</option>
+                            <option value="English Language">English Language</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="RE">RE</option>
+                            <option value="German">German</option>
+                            <option value="French">French</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="Art & Design">Art & Design</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Music">Music</option>
+                            <option value="Fashion Design">Fashion Design</option>
+                            <option value="Food Technology">Food Technology</option>
+                            <option value="Design Technology">Design Technology</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Sociology">Sociology</option>
+                            <option value="Child Development">Child Development</option>
+                            <option value="Business">Business</option>
+                            <option value="Physical Education">Physical Education</option>
                         </optgroup>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Subjects (comma-separated)</label>
-                    <input type="text" id="staffSubjects" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="e.g., Science, Mathematics">
+                    <input type="text" id="staffSubjects" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="e.g., Calculus, Algebra">
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Sub Roles (comma-separated)</label>
-                    <input type="text" id="staffSubRoles" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="e.g., Safeguarding, Human Resources...">
+                    <input type="text" id="staffSubRoles" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" placeholder="e.g., Form Tutor, Exam Coordinator">
                 </div>
 
                 <div>
@@ -710,7 +723,7 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('activity_log').insert([{
+                const { error } = await sbClient.from('activity_log').insert([{
                     timestamp: new Date().toISOString(),
                     user_name: currentUser,
                     action,
@@ -718,6 +731,7 @@
                     module
                 }]);
                 
+                if (error) throw error;
                 console.log(`✅ Activity logged: ${action}`);
             } catch (error) {
                 console.error('Error logging activity:', error);
@@ -756,12 +770,14 @@
             e.preventDefault();
             const fullName = document.getElementById('fullName').value;
             const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
 
             if (password !== 'admin') {
-                showAlert('loginError', 'Invalid password. Password is "admin".', 'error');
+                errorDiv.textContent = 'Invalid password. Password is "admin".';
                 return;
             }
 
+            errorDiv.textContent = '';
             currentUser = fullName;
             localStorage.setItem('currentUser', fullName);
             await logActivity('Login', `${fullName} logged into the system`, 'Authentication');
@@ -803,16 +819,16 @@
                 document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
                 document.getElementById(pageId).classList.remove('hidden');
 
-                if (pageId === 'staff') renderStaffTable();
-                else if (pageId === 'punishments') renderPunishments();
-                else if (pageId === 'promotions') renderPromotions();
-                else if (pageId === 'observations') renderObservations();
-                else if (pageId === 'loa') renderLOA();
-                else if (pageId === 'awards') renderAwards();
-                else if (pageId === 'activitylog') renderActivityLog();
+                if (pageId === 'staff') await renderStaffTable();
+                else if (pageId === 'punishments') await renderPunishments();
+                else if (pageId === 'promotions') await renderPromotions();
+                else if (pageId === 'observations') await renderObservations();
+                else if (pageId === 'loa') await renderLOA();
+                else if (pageId === 'awards') await renderAwards();
+                else if (pageId === 'activitylog') await renderActivityLog();
                 else if (pageId === 'dashboard') {
-                    updateDashboardStats();
-                    updateRecentActivity();
+                    await updateDashboardStats();
+                    await updateRecentActivity();
                 }
             });
         });
@@ -869,20 +885,25 @@
 
             try {
                 if (editingStaffId) {
-                    await sbClient.from('staff').update(staffData).eq('id', editingStaffId);
+                    const { error } = await sbClient.from('staff').update(staffData).eq('id', editingStaffId);
+                    if (error) throw error;
+                    
                     await logActivity('Update', `Updated staff member: ${staffData.full_name}`, 'Staff Management');
                     showAlert('staffAlert', 'Staff member updated!', 'success');
                 } else {
-                    await sbClient.from('staff').insert([staffData]);
+                    const { error } = await sbClient.from('staff').insert([staffData]);
+                    if (error) throw error;
+                    
                     await logActivity('Create', `Added new staff member: ${staffData.full_name}`, 'Staff Management');
                     showAlert('staffAlert', 'Staff member added!', 'success');
                 }
 
                 closeModal('staffModal');
-                renderStaffTable();
-                updateStaffSelects();
-                updateDashboardStats();
+                await renderStaffTable();
+                await updateStaffSelects();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('staffAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -895,7 +916,11 @@
 
             try {
                 const { data, error } = await sbClient.from('staff').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
+                
+                if (error) {
+                    console.error('Query error:', error);
+                    throw error;
+                }
 
                 if (!data || data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No staff members</td></tr>';
@@ -908,7 +933,7 @@
                             <td class="px-6 py-4 font-semibold text-gray-900">${member.full_name}</td>
                             <td class="px-6 py-4 text-gray-700">${member.role}</td>
                             <td class="px-6 py-4 text-gray-700">${member.department}</td>
-                            <td class="px-6 py-4 text-gray-700 text-sm">${member.subjects}</td>
+                            <td class="px-6 py-4 text-gray-700 text-sm">${member.subjects || '-'}</td>
                             <td class="px-6 py-4 space-x-2">
                                 <button onclick="viewStaffDetail(${member.id})" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
                                     <i class="fas fa-eye"></i> View
@@ -924,6 +949,7 @@
                     `;
                 });
             } catch (error) {
+                console.error('Error loading staff:', error);
                 showAlert('staffAlert', 'Error loading staff: ' + error.message, 'error');
             }
         }
@@ -946,6 +972,7 @@
                 document.getElementById('staffModalTitle').textContent = 'Edit Staff Member';
                 openModal('staffModal');
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('staffAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -955,18 +982,21 @@
             if (!sbClient) return;
 
             try {
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', id).single();
-                await sbClient.from('staff').delete().eq('id', id);
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', id).single();
+                const { error } = await sbClient.from('staff').delete().eq('id', id);
                 
-                if (staffRes.data) {
-                    await logActivity('Delete', `Deleted staff member: ${staffRes.data.full_name}`, 'Staff Management');
+                if (error) throw error;
+                
+                if (staffData) {
+                    await logActivity('Delete', `Deleted staff member: ${staffData.full_name}`, 'Staff Management');
                 }
                 
                 showAlert('staffAlert', 'Staff member deleted!', 'success');
-                renderStaffTable();
-                updateStaffSelects();
-                updateDashboardStats();
+                await renderStaffTable();
+                await updateStaffSelects();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('staffAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1041,6 +1071,7 @@
 
                 document.getElementById('staffDetailContent').innerHTML = html;
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('staffAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1055,7 +1086,7 @@
             if (!sbClient) return;
 
             try {
-                const { data, error } = await sbClient.from('staff').select('*').order('full_name');
+                const { data, error } = await sbClient.from('staff').select('id, full_name').order('full_name');
                 if (error) throw error;
 
                 const selects = ['punishmentStaff', 'promotionStaff', 'observationStaff', 'loaStaff', 'awardStaff'];
@@ -1095,9 +1126,9 @@
             const punishmentType = document.getElementById('punishmentType').value;
 
             try {
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
-                await sbClient.from('punishments').insert([{
+                const { error } = await sbClient.from('punishments').insert([{
                     staff_id: staffId,
                     type: punishmentType,
                     reason: document.getElementById('punishmentReason').value,
@@ -1106,15 +1137,18 @@
                     recorded_by: currentUser
                 }]);
 
-                if (staffRes.data) {
-                    await logActivity('Create', `Recorded ${punishmentType} for ${staffRes.data.full_name}`, 'Punishments');
+                if (error) throw error;
+
+                if (staffData) {
+                    await logActivity('Create', `Recorded ${punishmentType} for ${staffData.full_name}`, 'Punishments');
                 }
 
                 showAlert('punishmentsAlert', 'Punishment recorded!', 'success');
                 closeModal('punishmentModal');
-                renderPunishments();
-                updateDashboardStats();
+                await renderPunishments();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -1173,6 +1207,7 @@
                     container.innerHTML += html;
                 });
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1182,11 +1217,14 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('punishments').delete().eq('id', id);
+                const { error } = await sbClient.from('punishments').delete().eq('id', id);
+                if (error) throw error;
+                
                 await logActivity('Delete', 'Deleted punishment record', 'Punishments');
-                renderPunishments();
-                updateDashboardStats();
+                await renderPunishments();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1227,9 +1265,9 @@
             try {
                 const staffId = parseInt(document.getElementById('promotionStaff').value);
                 const newRole = document.getElementById('promotionNewRole').value;
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
-                await sbClient.from('promotions').insert([{
+                const { error: promError } = await sbClient.from('promotions').insert([{
                     staff_id: staffId,
                     previous_role: document.getElementById('promotionPreviousRole').value,
                     new_role: newRole,
@@ -1238,18 +1276,22 @@
                     recorded_by: currentUser
                 }]);
 
-                await sbClient.from('staff').update({ role: newRole }).eq('id', staffId);
+                if (promError) throw promError;
 
-                if (staffRes.data) {
-                    await logActivity('Create', `Promoted ${staffRes.data.full_name} to ${newRole}`, 'Promotions');
+                const { error: updateError } = await sbClient.from('staff').update({ role: newRole }).eq('id', staffId);
+                if (updateError) throw updateError;
+
+                if (staffData) {
+                    await logActivity('Create', `Promoted ${staffData.full_name} to ${newRole}`, 'Promotions');
                 }
 
                 showAlert('promotionsAlert', 'Promotion recorded!', 'success');
                 closeModal('promotionModal');
-                renderPromotions();
-                renderStaffTable();
-                updateDashboardStats();
+                await renderPromotions();
+                await renderStaffTable();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('promotionsAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -1293,6 +1335,7 @@
                     container.innerHTML += html;
                 });
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('promotionsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1302,11 +1345,14 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('promotions').delete().eq('id', id);
+                const { error } = await sbClient.from('promotions').delete().eq('id', id);
+                if (error) throw error;
+                
                 await logActivity('Delete', 'Deleted promotion record', 'Promotions');
-                renderPromotions();
-                updateDashboardStats();
+                await renderPromotions();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('promotionsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1333,9 +1379,9 @@
             const rating = document.getElementById('observationRating').value;
 
             try {
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
-                await sbClient.from('observations').insert([{
+                const { error } = await sbClient.from('observations').insert([{
                     staff_id: staffId,
                     observer: document.getElementById('observationObserver').value,
                     date: document.getElementById('observationDate').value,
@@ -1345,15 +1391,18 @@
                     recorded_by: currentUser
                 }]);
 
-                if (staffRes.data) {
-                    await logActivity('Create', `Added lesson observation for ${staffRes.data.full_name} - Rating: ${rating}`, 'Lesson Observations');
+                if (error) throw error;
+
+                if (staffData) {
+                    await logActivity('Create', `Added lesson observation for ${staffData.full_name} - Rating: ${rating}`, 'Lesson Observations');
                 }
 
                 showAlert('observationsAlert', 'Observation recorded!', 'success');
                 closeModal('observationModal');
-                renderObservations();
-                updateDashboardStats();
+                await renderObservations();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('observationsAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -1417,6 +1466,7 @@
                     container.innerHTML += html;
                 });
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('observationsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1426,11 +1476,14 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('observations').delete().eq('id', id);
+                const { error } = await sbClient.from('observations').delete().eq('id', id);
+                if (error) throw error;
+                
                 await logActivity('Delete', 'Deleted lesson observation record', 'Lesson Observations');
-                renderObservations();
-                updateDashboardStats();
+                await renderObservations();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('observationsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1456,9 +1509,9 @@
             const loaType = document.getElementById('loaType').value;
 
             try {
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
-                await sbClient.from('leave_of_absence').insert([{
+                const { error } = await sbClient.from('leave_of_absence').insert([{
                     staff_id: staffId,
                     type: loaType,
                     start_date: document.getElementById('loaStartDate').value,
@@ -1468,15 +1521,18 @@
                     recorded_by: currentUser
                 }]);
 
-                if (staffRes.data) {
-                    await logActivity('Create', `Recorded ${loaType} leave for ${staffRes.data.full_name}`, 'Leave of Absence');
+                if (error) throw error;
+
+                if (staffData) {
+                    await logActivity('Create', `Recorded ${loaType} leave for ${staffData.full_name}`, 'Leave of Absence');
                 }
 
                 showAlert('loaAlert', 'Leave recorded!', 'success');
                 closeModal('loaModal');
-                renderLOA();
-                updateDashboardStats();
+                await renderLOA();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('loaAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -1501,7 +1557,6 @@
                 const today = new Date();
                 const current = loas.filter(l => new Date(l.start_date) <= today && today <= new Date(l.end_date));
                 const upcoming = loas.filter(l => new Date(l.start_date) > today);
-                const past = loas.filter(l => new Date(l.end_date) < today);
 
                 if (current.length > 0) {
                     let html = '<div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500"><h3 class="text-xl font-bold text-yellow-600 mb-4"><i class="fas fa-calendar-check"></i> Currently on Leave</h3><div class="space-y-3">';
@@ -1547,6 +1602,7 @@
                     container.innerHTML += html;
                 }
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('loaAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1556,11 +1612,14 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('leave_of_absence').delete().eq('id', id);
+                const { error } = await sbClient.from('leave_of_absence').delete().eq('id', id);
+                if (error) throw error;
+                
                 await logActivity('Delete', 'Deleted leave of absence record', 'Leave of Absence');
-                renderLOA();
-                updateDashboardStats();
+                await renderLOA();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('loaAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1587,9 +1646,9 @@
             const awardType = document.getElementById('awardType').value;
 
             try {
-                const staffRes = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
+                const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
-                await sbClient.from('awards').insert([{
+                const { error } = await sbClient.from('awards').insert([{
                     staff_id: staffId,
                     type: awardType,
                     date: document.getElementById('awardDate').value,
@@ -1598,15 +1657,18 @@
                     recorded_by: currentUser
                 }]);
 
-                if (staffRes.data) {
-                    await logActivity('Create', `Awarded ${awardType} to ${staffRes.data.full_name}`, 'Awards & Praise');
+                if (error) throw error;
+
+                if (staffData) {
+                    await logActivity('Create', `Awarded ${awardType} to ${staffData.full_name}`, 'Awards & Praise');
                 }
 
                 showAlert('awardsAlert', 'Award recorded!', 'success');
                 closeModal('awardModal');
-                renderAwards();
-                updateDashboardStats();
+                await renderAwards();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('awardsAlert', 'Error: ' + error.message, 'error');
             }
         });
@@ -1650,6 +1712,7 @@
                     container.innerHTML += html;
                 });
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('awardsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1659,11 +1722,14 @@
             if (!sbClient) return;
 
             try {
-                await sbClient.from('awards').delete().eq('id', id);
+                const { error } = await sbClient.from('awards').delete().eq('id', id);
+                if (error) throw error;
+                
                 await logActivity('Delete', 'Deleted award record', 'Awards & Praise');
-                renderAwards();
-                updateDashboardStats();
+                await renderAwards();
+                await updateDashboardStats();
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('awardsAlert', 'Error: ' + error.message, 'error');
             }
         }
@@ -1676,9 +1742,9 @@
             if (!sbClient) return;
 
             try {
-                const { data: staff } = await sbClient.from('staff').select('*');
-                const { data: punishments } = await sbClient.from('punishments').select('*');
-                const { data: promotions } = await sbClient.from('promotions').select('*');
+                const { data: staff } = await sbClient.from('staff').select('*', { count: 'exact' });
+                const { data: punishments } = await sbClient.from('punishments').select('*', { count: 'exact' });
+                const { data: promotions } = await sbClient.from('promotions').select('*', { count: 'exact' });
                 const { data: loas } = await sbClient.from('leave_of_absence').select('*');
 
                 const today = new Date();
@@ -1774,12 +1840,12 @@
             initSupabase();
 
             const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
+            if (savedUser && sbClient) {
                 currentUser = savedUser;
                 showDashboard();
             }
 
-            updateStaffSelects();
+            await updateStaffSelects();
         });
     </script>
 </body>
