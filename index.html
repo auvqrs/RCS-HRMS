@@ -83,7 +83,7 @@
                         <i class="fas fa-exclamation-circle mr-3"></i> Punishments
                     </button>
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="promotions">
-                        <i class="fas fa-arrow-up mr-3"></i> Promotions & Demotions
+                        <i class="fas fa-arrow-up mr-3"></i> Promotions
                     </button>
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="observations">
                         <i class="fas fa-eye mr-3"></i> Lesson Observations
@@ -171,8 +171,70 @@
 
                         <div id="staffAlert"></div>
 
+                        <!-- Sorting and Display Options -->
+                        <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <!-- Sort by Rank -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sort by Rank</label>
+                                    <select id="staffSortByRank" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm">
+                                        <option value="">No Rank Filter</option>
+                                        <option value="EXECUTIVE">Executive Leadership</option>
+                                        <option value="SENIOR">Senior Leadership</option>
+                                        <option value="MIDDLE">Middle Leadership</option>
+                                        <option value="LOWER">Lower Leadership</option>
+                                    </select>
+                                </div>
+
+                                <!-- Sort A-Z or Z-A -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sort Name</label>
+                                    <select id="staffSortByName" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm">
+                                        <option value="">Default</option>
+                                        <option value="az">A → Z</option>
+                                        <option value="za">Z → A</option>
+                                    </select>
+                                </div>
+
+                                <!-- Sort by Department -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sort by Department</label>
+                                    <select id="staffSortByDept" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm">
+                                        <option value="">All Departments</option>
+                                        <option value="Core Subjects Department">Core Subjects Department</option>
+                                        <option value="Humanities Department">Humanities Department</option>
+                                        <option value="Languages Department">Languages Department</option>
+                                        <option value="Creative Arts Department">Creative Arts Department</option>
+                                        <option value="Technology Department">Technology Department</option>
+                                        <option value="Social Sciences Department">Social Sciences Department</option>
+                                        <option value="PE Department">PE Department</option>
+                                    </select>
+                                </div>
+
+                                <!-- Display View -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Display Mode</label>
+                                    <div class="flex gap-2">
+                                        <button id="viewModeTable" class="flex-1 px-3 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition text-sm font-semibold" title="Table View">
+                                            <i class="fas fa-table"></i>
+                                        </button>
+                                        <button id="viewModeCards" class="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-semibold" title="Card View">
+                                            <i class="fas fa-th"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reset Filters Button -->
+                            <div class="flex justify-end">
+                                <button id="staffResetFilters" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition text-sm font-semibold">
+                                    <i class="fas fa-redo"></i> Reset Filters
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                            <div class="overflow-x-auto">
+                            <div class="overflow-x-auto" id="staffTableView">
                                 <table class="w-full">
                                     <thead class="bg-gray-50 border-b-2 border-gray-200">
                                         <tr>
@@ -187,6 +249,11 @@
                                         <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No staff members</td></tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div id="staffCardsView" class="hidden p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="staffCardsContainer">
+                                    <p class="text-gray-500 text-center py-8 col-span-full">No staff members</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -280,6 +347,76 @@
                         <div>
                             <h2 class="text-4xl font-bold text-gray-900">Activity Log</h2>
                             <p class="text-gray-600 mt-1">System activity and audit trail</p>
+                        </div>
+
+                        <!-- Activity Log Filters -->
+                        <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Date Range</label>
+                                    <div class="flex gap-2">
+                                        <input type="date" id="activityStartDate" class="w-1/2 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500">
+                                        <input type="date" id="activityEndDate" class="w-1/2 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Preset</label>
+                                    <select id="activityPreset" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500">
+                                        <option value="all">All time</option>
+                                        <option value="7">Last 7 days</option>
+                                        <option value="30">Last 30 days</option>
+                                        <option value="90">Last 90 days</option>
+                                        <option value="month">This month</option>
+                                        <option value="year">This year</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Search / User</label>
+                                    <input type="text" id="activitySearch" placeholder="Search details, user or action" class="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Modules</label>
+                                    <div class="flex flex-wrap gap-2" id="activityModuleFilters">
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="All" checked>All
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Staff Management">Staff
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Punishments">Punishments
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Promotions">Promotions
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Lesson Observations">Observations
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Leave of Absence">LOA
+                                        </label>
+                                        <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Awards & Praise">Awards
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-end justify-end">
+                                    <div class="flex gap-2">
+                                        <button id="activityResetFilters" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </button>
+                                        <button id="activityExport" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition">
+                                            <i class="fas fa-file-export"></i> Export
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="bg-white rounded-xl shadow-md p-6">
@@ -873,51 +1010,6 @@
             }
         });
 
-        async function renderStaffTable() {
-            if (!sbClient) return;
-
-            const tbody = document.getElementById('staffTableBody');
-            tbody.innerHTML = '';
-
-            try {
-                const { data, error } = await sbClient.from('staff').select('*').order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('Query error:', error);
-                    throw error;
-                }
-
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No staff members</td></tr>';
-                    return;
-                }
-
-                data.forEach(member => {
-                    tbody.innerHTML += `
-                        <tr class="border-b hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-semibold text-gray-900">${member.full_name}</td>
-                            <td class="px-6 py-4 text-gray-700">${member.role}</td>
-                            <td class="px-6 py-4 text-gray-700">${member.department}</td>
-                            <td class="px-6 py-4 text-gray-700 text-sm">${member.subjects || '-'}</td>
-                            <td class="px-6 py-4 space-x-2">
-                                <button onclick="viewStaffDetail('${member.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
-                                    <i class="fas fa-eye"></i> View
-                                </button>
-                                <button onclick="editStaff('${member.id}')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button onclick="deleteStaff('${member.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading staff:', error);
-                showAlert('staffAlert', 'Error loading staff: ' + error.message, 'error');
-            }
-        }
 
         async function editStaff(id) {
             if (!sbClient) return;
@@ -965,6 +1057,230 @@
                 showAlert('staffAlert', 'Error: ' + error.message, 'error');
             }
         }
+
+        // ============================================
+        // STAFF SORTING & FILTERING
+        // ============================================
+
+        const roleHierarchy = {
+            'Group Founder': 1,
+            'Executive Headteacher': 2,
+            'Headteacher': 3,
+            'Deputy Headteacher': 4,
+            'Assistant Headteacher': 5,
+            'Site & Infrastructure Team': 6,
+            'Behaviour Support Manager': 7,
+            'Pastoral Support Manager': 8,
+            'Head of Year': 9,
+            'Head of Department': 10,
+            'Senior Teaching Staff': 11,
+            'Teaching Staff': 12,
+            'Support Staff': 13,
+            'Trainee Staff': 14
+        };
+
+        const rankCategories = {
+            'EXECUTIVE': ['Group Founder', 'Executive Headteacher', 'Headteacher'],
+            'SENIOR': ['Deputy Headteacher', 'Assistant Headteacher'],
+            'MIDDLE': ['Site & Infrastructure Team', 'Behaviour Support Manager', 'Pastoral Support Manager', 'Head of Year', 'Head of Department'],
+            'LOWER': ['Senior Teaching Staff', 'Teaching Staff', 'Support Staff', 'Trainee Staff']
+        };
+
+        let currentViewMode = 'table';
+        let staffDataCache = [];
+
+        async function getFilteredSortedStaff() {
+            if (!sbClient) return [];
+
+            try {
+                const { data, error } = await sbClient.from('staff').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+
+                staffDataCache = data || [];
+                
+                // Apply rank filter
+                const rankFilter = document.getElementById('staffSortByRank').value;
+                if (rankFilter) {
+                    staffDataCache = staffDataCache.filter(member => 
+                        rankCategories[rankFilter]?.includes(member.role)
+                    );
+                }
+
+                // Apply department filter
+                const deptFilter = document.getElementById('staffSortByDept').value;
+                if (deptFilter) {
+                    staffDataCache = staffDataCache.filter(member => member.department === deptFilter);
+                }
+
+                // Apply name sorting
+                const nameSort = document.getElementById('staffSortByName').value;
+                if (nameSort === 'az') {
+                    staffDataCache.sort((a, b) => a.full_name.localeCompare(b.full_name));
+                } else if (nameSort === 'za') {
+                    staffDataCache.sort((a, b) => b.full_name.localeCompare(a.full_name));
+                }
+
+                return staffDataCache;
+            } catch (error) {
+                console.error('Error loading filtered staff:', error);
+                return [];
+            }
+        }
+
+        async function renderStaffTable() {
+            try {
+                const data = await getFilteredSortedStaff();
+
+                if (currentViewMode === 'table') {
+                    renderTableView(data);
+                } else {
+                    renderCardsView(data);
+                }
+            } catch (error) {
+                console.error('Error rendering staff:', error);
+                showAlert('staffAlert', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        function renderTableView(data) {
+            const tableView = document.getElementById('staffTableView');
+            const cardsView = document.getElementById('staffCardsView');
+            const tbody = document.getElementById('staffTableBody');
+
+            tableView.classList.remove('hidden');
+            cardsView.classList.add('hidden');
+
+            tbody.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No staff members found</td></tr>';
+                return;
+            }
+
+            data.forEach(member => {
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 font-semibold text-gray-900">${member.full_name}</td>
+                        <td class="px-6 py-4 text-gray-700">${member.role}</td>
+                        <td class="px-6 py-4 text-gray-700">${member.department}</td>
+                        <td class="px-6 py-4 text-gray-700 text-sm">${member.subjects || '-'}</td>
+                        <td class="px-6 py-4 space-x-2">
+                            <button onclick="viewStaffDetail('${member.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="editStaff('${member.id}')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteStaff('${member.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderCardsView(data) {
+            const tableView = document.getElementById('staffTableView');
+            const cardsView = document.getElementById('staffCardsView');
+            const cardsContainer = document.getElementById('staffCardsContainer');
+
+            tableView.classList.add('hidden');
+            cardsView.classList.remove('hidden');
+
+            cardsContainer.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                cardsContainer.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-full">No staff members found</p>';
+                return;
+            }
+
+            data.forEach(member => {
+                const roleRank = roleHierarchy[member.role] || 99;
+                const rankLabel = Object.entries(rankCategories).find(([_, roles]) => roles.includes(member.role))?.[0] || 'UNKNOWN';
+                
+                const card = `
+                    <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden border-l-4 border-emerald-500">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">${member.full_name}</h3>
+                                    <span class="inline-block mt-1 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-full">${rankLabel}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center text-sm">
+                                    <span class="text-gray-600 font-semibold w-20">Role:</span>
+                                    <span class="text-gray-800">${member.role}</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <span class="text-gray-600 font-semibold w-20">Dept:</span>
+                                    <span class="text-gray-800">${member.department}</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <span class="text-gray-600 font-semibold w-20">Subjects:</span>
+                                    <span class="text-gray-800">${member.subjects || 'N/A'}</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <span class="text-gray-600 font-semibold w-20">Sub Roles:</span>
+                                    <span class="text-gray-800">${member.sub_roles || 'N/A'}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-2 pt-4 border-t">
+                                <button onclick="viewStaffDetail('${member.id}')" class="flex-1 px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-xs font-semibold">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button onclick="editStaff('${member.id}')" class="flex-1 px-2 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition text-xs font-semibold">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="deleteStaff('${member.id}')" class="flex-1 px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-xs font-semibold">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                cardsContainer.innerHTML += card;
+            });
+        }
+
+        // Event listeners for filter/sort controls
+        document.getElementById('staffSortByRank').addEventListener('change', renderStaffTable);
+        document.getElementById('staffSortByName').addEventListener('change', renderStaffTable);
+        document.getElementById('staffSortByDept').addEventListener('change', renderStaffTable);
+
+        document.getElementById('viewModeTable').addEventListener('click', () => {
+            currentViewMode = 'table';
+            document.getElementById('viewModeTable').classList.add('bg-emerald-500', 'text-white');
+            document.getElementById('viewModeTable').classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeCards').classList.add('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeCards').classList.remove('bg-emerald-500', 'text-white');
+            renderStaffTable();
+        });
+
+        document.getElementById('viewModeCards').addEventListener('click', () => {
+            currentViewMode = 'cards';
+            document.getElementById('viewModeCards').classList.add('bg-emerald-500', 'text-white');
+            document.getElementById('viewModeCards').classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeTable').classList.add('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeTable').classList.remove('bg-emerald-500', 'text-white');
+            renderStaffTable();
+        });
+
+        document.getElementById('staffResetFilters').addEventListener('click', () => {
+            document.getElementById('staffSortByRank').value = '';
+            document.getElementById('staffSortByName').value = '';
+            document.getElementById('staffSortByDept').value = '';
+            currentViewMode = 'table';
+            document.getElementById('viewModeTable').classList.add('bg-emerald-500', 'text-white');
+            document.getElementById('viewModeTable').classList.remove('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeCards').classList.add('bg-gray-200', 'text-gray-700');
+            document.getElementById('viewModeCards').classList.remove('bg-emerald-500', 'text-white');
+            renderStaffTable();
+        });
+
 
         async function viewStaffDetail(id) {
             if (!sbClient) return;
@@ -1756,6 +2072,15 @@
             }
         }
 
+        let lastRenderedActivityLogs = [];
+
+        function parseDateInput(val) {
+            if (!val) return null;
+            const d = new Date(val);
+            if (isNaN(d)) return null;
+            return d;
+        }
+
         async function renderActivityLog() {
             if (!sbClient) return;
 
@@ -1764,23 +2089,82 @@
 
             try {
                 const { data: logs, error } = await sbClient.from('activity_log').select('*').order('timestamp', { ascending: false });
-
                 if (error) throw error;
 
-                if (!logs || logs.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No activity</p>';
+                let filtered = logs || [];
+
+                // Preset handling
+                const preset = document.getElementById('activityPreset')?.value || 'all';
+                const now = new Date();
+                let start = null;
+                let end = null;
+
+                if (preset && preset !== 'all') {
+                    if (preset === '7' || preset === '30' || preset === '90') {
+                        const days = parseInt(preset, 10);
+                        start = new Date();
+                        start.setDate(now.getDate() - days);
+                        end = now;
+                    } else if (preset === 'month') {
+                        start = new Date(now.getFullYear(), now.getMonth(), 1);
+                        end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+                    } else if (preset === 'year') {
+                        start = new Date(now.getFullYear(), 0, 1);
+                        end = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+                    }
+                }
+
+                // Override with explicit date inputs if provided
+                const sVal = document.getElementById('activityStartDate')?.value;
+                const eVal = document.getElementById('activityEndDate')?.value;
+                const sDate = parseDateInput(sVal);
+                const eDate = parseDateInput(eVal);
+                if (sDate) start = sDate;
+                if (eDate) end = eDate ? new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate(), 23, 59, 59) : end;
+
+                if (start || end) {
+                    filtered = filtered.filter(l => {
+                        const t = new Date(l.timestamp);
+                        if (start && t < start) return false;
+                        if (end && t > end) return false;
+                        return true;
+                    });
+                }
+
+                // Module filters
+                const moduleCheckboxes = Array.from(document.querySelectorAll('.activityModuleCheckbox')) || [];
+                const checked = moduleCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
+                if (checked.length && !checked.includes('All')) {
+                    filtered = filtered.filter(l => checked.some(c => (l.module || '').toLowerCase().includes(c.toLowerCase())));
+                }
+
+                // Search
+                const q = (document.getElementById('activitySearch')?.value || '').trim().toLowerCase();
+                if (q) {
+                    filtered = filtered.filter(l => {
+                        return (l.details || '').toLowerCase().includes(q)
+                            || (l.user_name || '').toLowerCase().includes(q)
+                            || (l.action || '').toLowerCase().includes(q)
+                            || (l.module || '').toLowerCase().includes(q);
+                    });
+                }
+
+                lastRenderedActivityLogs = filtered;
+
+                if (!filtered || filtered.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No activity for selected filters</p>';
                     return;
                 }
 
-                let html = '<div class="space-y-3">';
-                logs.forEach(log => {
+                let html = `<div class="space-y-3">`;
+                filtered.forEach(log => {
                     const time = new Date(log.timestamp).toLocaleString();
                     html += `
                         <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
                             <div>
-                                <p class="font-semibold text-gray-900">[${log.module}] ${log.action}</p>
+                                <p class="font-semibold text-gray-900">[${log.module || 'General'}] ${log.action}</p>
                                 <p class="text-gray-600 text-sm mt-1">${log.details || ''}</p>
-                                <p class="text-gray-500 text-xs mt-2"><strong>User:</strong> ${log.user_name} | <strong>Time:</strong> ${time}</p>
+                                <p class="text-gray-500 text-xs mt-2"><strong>User:</strong> ${log.user_name || 'System'} | <strong>Time:</strong> ${time}</p>
                             </div>
                         </div>
                     `;
@@ -1789,8 +2173,73 @@
                 container.innerHTML = html;
             } catch (error) {
                 console.error('Error fetching activity log:', error);
+                showAlert('activityLogContainer', 'Error: ' + error.message, 'error');
             }
         }
+
+        // Wire up activity controls
+        document.getElementById('activityPreset')?.addEventListener('change', () => {
+            // clear explicit date range when preset selected
+            document.getElementById('activityStartDate').value = '';
+            document.getElementById('activityEndDate').value = '';
+            renderActivityLog();
+        });
+
+        document.getElementById('activityStartDate')?.addEventListener('change', () => {
+            document.getElementById('activityPreset').value = 'all';
+            renderActivityLog();
+        });
+        document.getElementById('activityEndDate')?.addEventListener('change', () => {
+            document.getElementById('activityPreset').value = 'all';
+            renderActivityLog();
+        });
+
+        document.getElementById('activitySearch')?.addEventListener('input', () => renderActivityLog());
+
+        document.querySelectorAll('.activityModuleCheckbox').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const allCb = Array.from(document.querySelectorAll('.activityModuleCheckbox')).find(x => x.value === 'All');
+                if (e.target.value === 'All') {
+                    const checked = e.target.checked;
+                    document.querySelectorAll('.activityModuleCheckbox').forEach(x => x.checked = checked);
+                } else {
+                    if (!e.target.checked && allCb) allCb.checked = false;
+                    const others = Array.from(document.querySelectorAll('.activityModuleCheckbox')).filter(x => x.value !== 'All');
+                    if (others.every(x => x.checked) && allCb) allCb.checked = true;
+                }
+                renderActivityLog();
+            });
+        });
+
+        document.getElementById('activityResetFilters')?.addEventListener('click', () => {
+            document.getElementById('activityPreset').value = 'all';
+            document.getElementById('activityStartDate').value = '';
+            document.getElementById('activityEndDate').value = '';
+            document.getElementById('activitySearch').value = '';
+            document.querySelectorAll('.activityModuleCheckbox').forEach(x => x.checked = (x.value === 'All'));
+            renderActivityLog();
+        });
+
+        document.getElementById('activityExport')?.addEventListener('click', () => {
+            const data = lastRenderedActivityLogs || [];
+            if (!data.length) {
+                showAlert('activityLogContainer', 'No records to export', 'error');
+                return;
+            }
+            const rows = [];
+            rows.push(['Module','Action','Details','User','Timestamp']);
+            data.forEach(r => rows.push([r.module || '', r.action || '', (r.details || '').replace(/\n/g,' '), r.user_name || '', r.timestamp || '']));
+            const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `activity-log-${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
 
         // ============================================
         // INITIALIZATION
