@@ -79,8 +79,11 @@
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="staff">
                         <i class="fas fa-users mr-3"></i> Staff Management
                     </button>
-                    <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="punishments">
-                        <i class="fas fa-exclamation-circle mr-3"></i> Punishments
+                    <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="actions">
+                        <i class="fas fa-tasks mr-3"></i> Actions
+                    </button>
+                    <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="formerStaff">
+                        <i class="fas fa-user-slash mr-3"></i> Former Staff
                     </button>
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="promotions">
                         <i class="fas fa-arrow-up mr-3"></i> Promotions
@@ -122,8 +125,8 @@
                             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-gray-600 text-sm font-semibold">Punishments</p>
-                                        <p class="text-3xl font-bold text-gray-900" id="totalPunishmentsStat">0</p>
+                                        <p class="text-gray-600 text-sm font-semibold">Actions</p>
+                                        <p class="text-3xl font-bold text-gray-900" id="totalActionsStat">0</p>
                                     </div>
                                     <i class="fas fa-exclamation-circle text-red-500 text-3xl opacity-20"></i>
                                 </div>
@@ -258,20 +261,48 @@
                         </div>
                     </div>
 
-                    <div id="punishments" class="page hidden space-y-6">
+                    <div id="actions" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h2 class="text-4xl font-bold text-gray-900">Punishments</h2>
-                                <p class="text-gray-600 mt-1">Manage staff punishments and warnings</p>
+                                <h2 class="text-4xl font-bold text-gray-900">Actions</h2>
+                                <p class="text-gray-600 mt-1">Manage staff actions, including warnings, resignations and blacklist entries</p>
                             </div>
-                            <button id="addPunishmentBtn" class="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-lg hover:shadow-lg transition">
-                                <i class="fas fa-plus mr-2"></i> Add Punishment
+                            <button id="addActionBtn" class="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-lg hover:shadow-lg transition">
+                                <i class="fas fa-plus mr-2"></i> Add Action
                             </button>
                         </div>
 
-                        <div id="punishmentsAlert"></div>
-                        <div id="punishmentsContainer" class="grid grid-cols-1 gap-6">
-                            <p class="text-gray-500 text-center py-8">No punishments recorded</p>
+                        <div id="actionsAlert"></div>
+                        <div id="actionsContainer" class="grid grid-cols-1 gap-6">
+                            <p class="text-gray-500 text-center py-8">No actions recorded</p>
+                        </div>
+                    </div>
+
+                    <div id="formerStaff" class="page hidden space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-4xl font-bold text-gray-900">Former Staff</h2>
+                                <p class="text-gray-600 mt-1">View staff who have resigned or been blacklisted</p>
+                            </div>
+                        </div>
+                        <div id="formerStaffAlert"></div>
+                        <div id="formerStaffContainer" class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50 border-b-2 border-gray-200">
+                                        <tr>
+                                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Full Name</th>
+                                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Role</th>
+                                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Department</th>
+                                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Status</th>
+                                            <th class="px-6 py-4 text-left text-sm font-bold text-gray-700">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="formerStaffTableBody">
+                                        <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No former staff members</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -389,7 +420,7 @@
                                             <input type="checkbox" class="activityModuleCheckbox mr-2" value="Staff Management">Staff
                                         </label>
                                         <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
-                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Punishments">Punishments
+                                            <input type="checkbox" class="activityModuleCheckbox mr-2" value="Actions">Actions
                                         </label>
                                         <label class="inline-flex items-center px-2 py-1 bg-gray-100 rounded">
                                             <input type="checkbox" class="activityModuleCheckbox mr-2" value="Promotions">Promotions
@@ -506,6 +537,7 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
                     <textarea id="staffNotes" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none" rows="3" placeholder="Any additional information..."></textarea>
                 </div>
+                <input type="hidden" id="staffStatus" value="Active">
 
                 <div class="flex gap-3 pt-4">
                     <button type="button" class="modal-cancel flex-1 px-4 py-3 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition">Cancel</button>
@@ -518,7 +550,7 @@
     <div id="punishmentModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-red-600 to-red-700 text-white p-6 flex items-center justify-between">
-                <h2 class="text-2xl font-bold">Add Punishment</h2>
+                <h2 class="text-2xl font-bold">Add Action</h2>
                 <button class="modal-close text-2xl hover:text-gray-300 transition">&times;</button>
             </div>
 
@@ -531,7 +563,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Punishment Type</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Action Type</label>
                     <select id="punishmentType" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:outline-none" required>
                         <option value="">Select Type</option>
                         <option value="Reminder">Reminder (Verbal Warning)</option>
@@ -540,6 +572,8 @@
                         <option value="Suspension">Suspension</option>
                         <option value="Demotion">Demotion</option>
                         <option value="Termination">Termination</option>
+                        <option value="Resignation">Resignation</option>
+                        <option value="Staff Blacklist">Staff Blacklist</option>
                     </select>
                 </div>
 
@@ -922,7 +956,8 @@
                 document.getElementById(pageId).classList.remove('hidden');
 
                 if (pageId === 'staff') await renderStaffTable();
-                else if (pageId === 'punishments') await renderPunishments();
+                else if (pageId === 'actions') await renderActions();
+                else if (pageId === 'formerStaff') await renderFormerStaff();
                 else if (pageId === 'promotions') await renderPromotions();
                 else if (pageId === 'observations') await renderObservations();
                 else if (pageId === 'loa') await renderLOA();
@@ -982,7 +1017,8 @@
                 department: document.getElementById('staffDepartment').value,
                 subjects: document.getElementById('staffSubjects').value,
                 sub_roles: document.getElementById('staffSubRoles').value,
-                notes: document.getElementById('staffNotes').value
+                notes: document.getElementById('staffNotes').value,
+                status: document.getElementById('staffStatus').value || 'Active'
             };
 
             try {
@@ -1025,6 +1061,7 @@
                 document.getElementById('staffSubjects').value = data.subjects;
                 document.getElementById('staffSubRoles').value = data.sub_roles;
                 document.getElementById('staffNotes').value = data.notes;
+                document.getElementById('staffStatus').value = data.status || 'Active';
 
                 document.getElementById('staffModalTitle').textContent = 'Edit Staff Member';
                 openModal('staffModal');
@@ -1034,22 +1071,38 @@
             }
         }
 
-        async function deleteStaff(id) {
-            if (!confirm('Delete this staff member?')) return;
+        async function archiveStaff(id) {
             if (!sbClient) return;
+
+            const actionType = window.prompt('Enter the exit action type: Resignation or Staff Blacklist', 'Resignation');
+            if (!actionType) return;
+            const normalized = actionType.trim();
+            if (normalized !== 'Resignation' && normalized !== 'Staff Blacklist') {
+                alert('Please enter either Resignation or Staff Blacklist.');
+                return;
+            }
 
             try {
                 const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', id).single();
-                const { error } = await sbClient.from('staff').delete().eq('id', id);
-                
-                if (error) throw error;
-                
+                const { error: updateError } = await sbClient.from('staff').update({ status: 'Former' }).eq('id', id);
+                if (updateError) throw updateError;
+
+                const { error: insertError } = await sbClient.from('punishments').insert([{
+                    staff_id: id,
+                    type: normalized,
+                    reason: `${normalized} archived by HR`,
+                    date: new Date().toISOString().slice(0,10),
+                    notes: `${normalized} archived by HR.`
+                }]);
+                if (insertError) throw insertError;
+
                 if (staffData) {
-                    await logActivity('Delete', `Deleted staff member: ${staffData.full_name}`, 'Staff Management');
+                    await logActivity('Update', `${staffData.full_name} marked as former staff (${normalized})`, 'Staff Management');
                 }
-                
-                showAlert('staffAlert', 'Staff member deleted!', 'success');
+
+                showAlert('staffAlert', `Staff member archived as ${normalized}!`, 'success');
                 await renderStaffTable();
+                await renderFormerStaff();
                 await updateStaffSelects();
                 await updateDashboardStats();
             } catch (error) {
@@ -1096,7 +1149,7 @@
                 const { data, error } = await sbClient.from('staff').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
 
-                staffDataCache = data || [];
+                staffDataCache = (data || []).filter(member => member.status !== 'Former');
                 
                 // Apply rank filter
                 const rankFilter = document.getElementById('staffSortByRank').value;
@@ -1171,8 +1224,8 @@
                             <button onclick="editStaff('${member.id}')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button onclick="deleteStaff('${member.id}')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm">
-                                <i class="fas fa-trash"></i>
+                            <button onclick="archiveStaff('${member.id}')" class="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm">
+                                <i class="fas fa-user-slash"></i> Archive
                             </button>
                         </td>
                     </tr>
@@ -1235,8 +1288,8 @@
                                 <button onclick="editStaff('${member.id}')" class="flex-1 px-2 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition text-xs font-semibold">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
-                                <button onclick="deleteStaff('${member.id}')" class="flex-1 px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition text-xs font-semibold">
-                                    <i class="fas fa-trash"></i>
+                                <button onclick="archiveStaff('${member.id}')" class="flex-1 px-2 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-xs font-semibold">
+                                    <i class="fas fa-user-slash"></i> Archive
                                 </button>
                             </div>
                         </div>
@@ -1244,6 +1297,44 @@
                 `;
                 cardsContainer.innerHTML += card;
             });
+        }
+
+        async function renderFormerStaff() {
+            if (!sbClient) return;
+
+            const tbody = document.getElementById('formerStaffTableBody');
+            tbody.innerHTML = '';
+
+            try {
+                const { data, error } = await sbClient.from('staff').select('*').order('full_name');
+                if (error) throw error;
+
+                const formerStaff = (data || []).filter(member => member.status === 'Former');
+
+                if (!formerStaff.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No former staff members</td></tr>';
+                    return;
+                }
+
+                formerStaff.forEach(member => {
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 font-semibold text-gray-900">${member.full_name}</td>
+                            <td class="px-6 py-4 text-gray-700">${member.role}</td>
+                            <td class="px-6 py-4 text-gray-700">${member.department}</td>
+                            <td class="px-6 py-4 text-gray-700">${member.status || 'Former'}</td>
+                            <td class="px-6 py-4">
+                                <button onclick="viewStaffDetail('${member.id}')" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error rendering former staff:', error);
+                showAlert('formerStaffAlert', 'Error: ' + error.message, 'error');
+            }
         }
 
         // Event listeners for filter/sort controls
@@ -1301,6 +1392,53 @@
                 const today = new Date();
                 const onLoa = loas?.some(l => new Date(l.start_date) <= today && today <= new Date(l.end_date));
 
+                const actionHistory = (punishments || []).map(p => `
+                    <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <p class="font-bold text-gray-900">${p.type}</p>
+                                <p class="text-gray-600 text-sm mt-1">${p.reason}</p>
+                                <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
+                                <p class="text-gray-500 text-xs mt-1">${p.notes || ''}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') || '<p class="text-gray-500">No actions recorded.</p>';
+
+                const promotionHistory = (promotions || []).map(p => `
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                        <p class="font-bold text-gray-900">${p.previous_role || 'N/A'} → ${p.new_role}</p>
+                        <p class="text-gray-600 text-sm mt-1">${p.notes || ''}</p>
+                        <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
+                    </div>
+                `).join('') || '<p class="text-gray-500">No promotions recorded.</p>';
+
+                const observationHistory = (observations || []).map(o => `
+                    <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                        <p class="font-bold text-gray-900">Lesson Observation</p>
+                        <p class="text-gray-600 text-sm mt-1">Rating: ${o.rating}</p>
+                        <p class="text-gray-600 text-sm mt-1">Observer: ${o.observer_name || 'N/A'}</p>
+                        <p class="text-gray-500 text-xs mt-2">Date: ${o.date}</p>
+                        <p class="text-gray-500 text-xs mt-1">${o.comments || ''}</p>
+                    </div>
+                `).join('') || '<p class="text-gray-500">No observations recorded.</p>';
+
+                const awardHistory = (awards || []).map(a => `
+                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                        <p class="font-bold text-gray-900">${a.type}</p>
+                        <p class="text-gray-600 text-sm mt-1">${a.reason || ''}</p>
+                        <p class="text-gray-500 text-xs mt-2">Date: ${a.date}</p>
+                    </div>
+                `).join('') || '<p class="text-gray-500">No awards recorded.</p>';
+
+                const leaveHistory = (loas || []).map(l => `
+                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                        <p class="font-bold text-gray-900">${l.type}</p>
+                        <p class="text-gray-600 text-sm mt-1">${l.reason || ''}</p>
+                        <p class="text-gray-500 text-xs mt-2">${l.start_date} → ${l.end_date}</p>
+                    </div>
+                `).join('') || '<p class="text-gray-500">No leave records.</p>';
+
                 let html = `
                     <div class="bg-white rounded-xl shadow-md p-8">
                         <button onclick="backToStaff()" class="mb-6 px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition">
@@ -1313,6 +1451,10 @@
                                 ${onLoa ? '<p class="text-yellow-600 font-semibold"><i class="fas fa-calendar"></i> Currently on Leave</p>' : ''}
 
                                 <div class="mt-6 space-y-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <p class="text-gray-600 text-sm font-semibold">STATUS</p>
+                                        <p class="text-lg font-bold text-gray-900">${staff.status || 'Active'}</p>
+                                    </div>
                                     <div class="bg-gray-50 p-4 rounded-lg">
                                         <p class="text-gray-600 text-sm font-semibold">ROLE</p>
                                         <p class="text-lg font-bold text-gray-900">${staff.role}</p>
@@ -1331,7 +1473,7 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 text-center">
                                     <p class="text-3xl font-bold text-emerald-600">${punishments?.length || 0}</p>
-                                    <p class="text-gray-600 text-sm font-semibold mt-2">Punishments</p>
+                                    <p class="text-gray-600 text-sm font-semibold mt-2">Actions</p>
                                 </div>
                                 <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-center">
                                     <p class="text-3xl font-bold text-blue-600">${promotions?.length || 0}</p>
@@ -1345,6 +1487,40 @@
                                     <p class="text-3xl font-bold text-yellow-600">${awards?.length || 0}</p>
                                     <p class="text-gray-600 text-sm font-semibold mt-2">Awards</p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 grid grid-cols-1 gap-6">
+                            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">Additional Notes</h3>
+                                <p class="text-gray-700">${staff.notes || 'No additional notes have been recorded.'}</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Action History</h3>
+                                    <div class="space-y-4">${actionHistory}</div>
+                                </div>
+                                <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Promotion History</h3>
+                                    <div class="space-y-4">${promotionHistory}</div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Observations</h3>
+                                    <div class="space-y-4">${observationHistory}</div>
+                                </div>
+                                <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Awards</h3>
+                                    <div class="space-y-4">${awardHistory}</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                                <h3 class="text-xl font-bold text-gray-900 mb-4">Leave History</h3>
+                                <div class="space-y-4">${leaveHistory}</div>
                             </div>
                         </div>
                     </div>
@@ -1367,15 +1543,16 @@
             if (!sbClient) return;
 
             try {
-                const { data, error } = await sbClient.from('staff').select('id, full_name').order('full_name');
+                const { data, error } = await sbClient.from('staff').select('id, full_name, status').order('full_name');
                 if (error) throw error;
 
+                const activeStaff = (data || []).filter(member => member.status !== 'Former');
                 const selects = ['punishmentStaff', 'promotionStaff', 'observationStaff', 'loaStaff', 'awardStaff'];
                 selects.forEach(selectId => {
                     const select = document.getElementById(selectId);
                     const current = select.value;
                     select.innerHTML = '<option value="">Select Staff Member</option>';
-                    data?.forEach(member => {
+                    activeStaff.forEach(member => {
                         select.innerHTML += `<option value="${member.id}">${member.full_name}</option>`;
                     });
                     select.value = current;
@@ -1386,10 +1563,10 @@
         }
 
         // ============================================
-        // PUNISHMENTS
+        // ACTIONS
         // ============================================
 
-        document.getElementById('addPunishmentBtn').addEventListener('click', () => {
+        document.getElementById('addActionBtn').addEventListener('click', () => {
             document.getElementById('punishmentForm').reset();
             document.getElementById('punishmentDate').valueAsDate = new Date();
             openModal('punishmentModal');
@@ -1399,19 +1576,19 @@
             e.preventDefault();
 
             if (!sbClient) {
-                showAlert('punishmentsAlert', 'Supabase not connected', 'error');
+                showAlert('actionsAlert', 'Supabase not connected', 'error');
                 return;
             }
 
             const staffId = document.getElementById('punishmentStaff').value;
-            const punishmentType = document.getElementById('punishmentType').value;
+            const actionType = document.getElementById('punishmentType').value;
 
             try {
                 const { data: staffData } = await sbClient.from('staff').select('full_name').eq('id', staffId).single();
 
                 const { error } = await sbClient.from('punishments').insert([{
                     staff_id: staffId,
-                    type: punishmentType,
+                    type: actionType,
                     reason: document.getElementById('punishmentReason').value,
                     date: document.getElementById('punishmentDate').value,
                     notes: document.getElementById('punishmentNotes').value
@@ -1419,24 +1596,76 @@
 
                 if (error) throw error;
 
-                if (staffData) {
-                    await logActivity('Create', `Recorded ${punishmentType} for ${staffData.full_name}`, 'Punishments');
+                if (actionType === 'Resignation' || actionType === 'Staff Blacklist') {
+                    const { error: statusError } = await sbClient.from('staff').update({ status: 'Former' }).eq('id', staffId);
+                    if (statusError) throw statusError;
                 }
 
-                showAlert('punishmentsAlert', 'Punishment recorded!', 'success');
+                if (staffData) {
+                    await logActivity('Create', `Recorded ${actionType} for ${staffData.full_name}`, 'Actions');
+                }
+
+                showAlert('actionsAlert', `${actionType} recorded!`, 'success');
                 closeModal('punishmentModal');
-                await renderPunishments();
+                await renderActions();
+                await renderStaffTable();
                 await updateDashboardStats();
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
+                showAlert('actionsAlert', 'Error: ' + error.message, 'error');
             }
         });
 
-        async function renderPunishments() {
+        function getActionStyle(type) {
+            const styles = {
+                'Reminder': {
+                    wrapper: 'bg-emerald-50 text-emerald-900',
+                    badge: 'bg-emerald-100 text-emerald-800',
+                    borderStyle: 'border-left: 4px solid #34d399;'
+                },
+                'Formal Warning': {
+                    wrapper: 'bg-yellow-50 text-yellow-900',
+                    badge: 'bg-yellow-100 text-yellow-800',
+                    borderStyle: 'border-left: 4px solid #facc15;'
+                },
+                'Strike': {
+                    wrapper: 'bg-orange-50 text-orange-900',
+                    badge: 'bg-orange-100 text-orange-800',
+                    borderStyle: 'border-left: 4px solid #fb923c;'
+                },
+                'Suspension': {
+                    wrapper: 'bg-red-50 text-red-900',
+                    badge: 'bg-red-100 text-red-800',
+                    borderStyle: 'border-left: 4px solid #f87171;'
+                },
+                'Demotion': {
+                    wrapper: 'bg-indigo-50 text-indigo-900',
+                    badge: 'bg-indigo-100 text-indigo-800',
+                    borderStyle: 'border-left: 4px solid #6366f1;'
+                },
+                'Termination': {
+                    wrapper: 'bg-red-100 text-red-900',
+                    badge: 'bg-red-200 text-red-900',
+                    borderStyle: 'border-left: 4px solid #ef4444;'
+                },
+                'Resignation': {
+                    wrapper: 'bg-yellow-50 text-yellow-900',
+                    badge: 'bg-yellow-200 text-yellow-900',
+                    borderStyle: 'border-left: 4px solid #f59e0b;'
+                },
+                'Staff Blacklist': {
+                    wrapper: 'bg-gray-900 text-white',
+                    badge: 'bg-black text-white',
+                    borderStyle: 'border-left: 4px solid #000000;'
+                }
+            };
+            return styles[type] || { wrapper: 'bg-white text-gray-900', badge: 'bg-gray-100 text-gray-800', borderStyle: 'border-left: 4px solid #cbd5e1;' };
+        }
+
+        async function renderActions() {
             if (!sbClient) return;
 
-            const container = document.getElementById('punishmentsContainer');
+            const container = document.getElementById('actionsContainer');
             container.innerHTML = '';
 
             try {
@@ -1446,7 +1675,7 @@
                 if (pError || sError) throw pError || sError;
 
                 if (!punishments || punishments.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No punishments recorded</p>';
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No actions recorded</p>';
                     return;
                 }
 
@@ -1461,19 +1690,22 @@
                     if (!member) return;
 
                     let html = `
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
+                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-slate-300">
                             <h3 class="text-xl font-bold text-gray-900 mb-4">${member.full_name}</h3>
                             <div class="space-y-3">
                     `;
 
                     grouped[staffId].forEach(p => {
+                        const style = getActionStyle(p.type);
                         html += `
-                            <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-bold text-gray-900">${p.type}</p>
-                                        <p class="text-gray-600 text-sm mt-1">${p.reason}</p>
+                            <div class="${style.wrapper} p-4 rounded-lg" style="${style.borderStyle}">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div class="flex-1">
+                                        <p class="font-bold ${p.type === 'Staff Blacklist' ? 'text-white' : 'text-gray-900'}">${p.type}</p>
+                                        <span class="inline-flex items-center ${style.badge} px-2 py-1 rounded-full text-xs font-semibold mt-2">${p.type}</span>
+                                        <p class="text-gray-600 text-sm mt-3">${p.reason}</p>
                                         <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
+                                        <p class="text-gray-500 text-xs mt-1">${p.notes || ''}</p>
                                     </div>
                                     <button onclick="deletePunishment('${p.id}')" class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
@@ -1488,24 +1720,24 @@
                 });
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
+                showAlert('actionsAlert', 'Error: ' + error.message, 'error');
             }
         }
 
         async function deletePunishment(id) {
-            if (!confirm('Delete this punishment?')) return;
+            if (!confirm('Delete this action?')) return;
             if (!sbClient) return;
 
             try {
                 const { error } = await sbClient.from('punishments').delete().eq('id', id);
                 if (error) throw error;
                 
-                await logActivity('Delete', 'Deleted punishment record', 'Punishments');
-                await renderPunishments();
+                await logActivity('Delete', 'Deleted action record', 'Actions');
+                await renderActions();
                 await updateDashboardStats();
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('punishmentsAlert', 'Error: ' + error.message, 'error');
+                showAlert('actionsAlert', 'Error: ' + error.message, 'error');
             }
         }
 
@@ -2027,7 +2259,7 @@
                 const onLoa = loas?.filter(l => new Date(l.start_date) <= today && today <= new Date(l.end_date)).length || 0;
 
                 document.getElementById('totalStaffStat').textContent = staff?.length || 0;
-                document.getElementById('totalPunishmentsStat').textContent = punishments?.length || 0;
+                document.getElementById('totalActionsStat').textContent = punishments?.length || 0;
                 document.getElementById('totalPromotionsStat').textContent = promotions?.length || 0;
                 document.getElementById('onLoaStat').textContent = onLoa;
             } catch (error) {
