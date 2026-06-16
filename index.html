@@ -76,6 +76,9 @@
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-100 transition" data-page="dashboard">
                         <i class="fas fa-chart-line mr-3"></i> Dashboard
                     </button>
+                    <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="analytics">
+                        <i class="fas fa-chart-pie mr-3"></i> Analytics
+                    </button>
                     <button class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition" data-page="staff">
                         <i class="fas fa-users mr-3"></i> Staff Management
                     </button>
@@ -161,6 +164,71 @@
                         </div>
                     </div>
 
+                    <div id="analytics" class="page hidden space-y-8">
+                        <div>
+                            <h2 class="text-4xl font-bold text-gray-900 mb-2">Analytics</h2>
+                            <p class="text-gray-600">Monitor staffing trends, actions, promotions and AI-powered HR insights.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-emerald-500">
+                                <p class="text-gray-600 text-sm font-semibold">Active Staff</p>
+                                <p id="analyticsActiveStaff" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                                <p class="text-emerald-600 text-sm mt-2">Current active team members</p>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
+                                <p class="text-gray-600 text-sm font-semibold">Punishments This Week</p>
+                                <p id="analyticsPunishmentsWeek" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                                <p class="text-red-500 text-sm mt-2">Recent conduct actions</p>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                                <p class="text-gray-600 text-sm font-semibold">Punishments This Month</p>
+                                <p id="analyticsPunishmentsMonth" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                                <p class="text-blue-500 text-sm mt-2">Monthly HR trend</p>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500">
+                                <p class="text-gray-600 text-sm font-semibold">Promotions This Week</p>
+                                <p id="analyticsPromotionsWeek" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+                                <p class="text-amber-500 text-sm mt-2">Leadership and role growth</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-xl shadow-md p-6 xl:col-span-2">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-900">Staff by Department</h3>
+                                        <p class="text-gray-600 text-sm">Current staffing mix across departments</p>
+                                    </div>
+                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold">Live data</span>
+                                </div>
+                                <div id="analyticsDepartmentList" class="space-y-4"></div>
+                            </div>
+
+                            <div class="bg-white rounded-xl shadow-md p-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-4">AI HR Report</h3>
+                                <div id="analyticsAIReport" class="space-y-3"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-xl shadow-md p-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Movement Summary</h3>
+                                <p class="text-gray-600 text-sm mb-4">A quick view of staff movement and personnel activity.</p>
+                                <ul class="space-y-3 text-sm text-gray-700">
+                                    <li class="flex justify-between border-b pb-2"><span>Department coverage</span><strong id="analyticsCoverageLabel">0 departments</strong></li>
+                                    <li class="flex justify-between border-b pb-2"><span>Actions tracked</span><strong id="analyticsTotalActions">0</strong></li>
+                                    <li class="flex justify-between"><span>Promotions recorded</span><strong id="analyticsTotalPromotions">0</strong></li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-md p-6">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Suggested Next Focus</h3>
+                                <p class="text-gray-600 text-sm mb-4">AI-assisted recommendations based on current trends.</p>
+                                <ul id="analyticsRecommendations" class="space-y-3 text-sm text-gray-700"></ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="staff" class="page hidden space-y-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -217,6 +285,7 @@
                                         <option value="Technology Department">Technology Department</option>
                                         <option value="Social Sciences Department">Social Sciences Department</option>
                                         <option value="PE Department">PE Department</option>
+                                        <option value="Site & Infrastructure Team">Site & Infrastructure Team</option>
                                     </select>
                                 </div>
 
@@ -279,6 +348,50 @@
                         </div>
 
                         <div id="actionsAlert"></div>
+
+                        <!-- Actions Filters -->
+                        <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Search -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Search Staff</label>
+                                    <input type="text" id="actionsSearch" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:outline-none text-sm" placeholder="Name or details...">
+                                </div>
+
+                                <!-- Filter by Action Type -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Action Type</label>
+                                    <select id="actionsFilterType" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-red-500 focus:outline-none text-sm">
+                                        <option value="">All Types</option>
+                                        <option value="Reminder">Reminder (Verbal Warning)</option>
+                                        <option value="Formal Warning">Formal Warning</option>
+                                        <option value="Strike">Strike</option>
+                                        <option value="Suspension">Suspension</option>
+                                        <option value="Demotion">Demotion</option>
+                                        <option value="Termination">Termination</option>
+                                        <option value="Resignation">Resignation</option>
+                                        <option value="Staff Blacklist">Staff Blacklist</option>
+                                    </select>
+                                </div>
+
+                                <!-- Date Range -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Date Range</label>
+                                    <div class="flex gap-2">
+                                        <input type="date" id="actionsStartDate" class="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-red-500">
+                                        <input type="date" id="actionsEndDate" class="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-red-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reset Filters Button -->
+                            <div class="flex justify-end">
+                                <button id="actionsResetFilters" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition text-sm font-semibold">
+                                    <i class="fas fa-redo"></i> Reset Filters
+                                </button>
+                            </div>
+                        </div>
+
                         <div id="actionsContainer" class="grid grid-cols-1 gap-6">
                             <p class="text-gray-500 text-center py-8">No actions recorded</p>
                         </div>
@@ -292,6 +405,50 @@
                             </div>
                         </div>
                         <div id="formerStaffAlert"></div>
+
+                        <!-- Former Staff Filters -->
+                        <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Search -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Search Staff</label>
+                                    <input type="text" id="formerStaffSearch" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm" placeholder="Name, role, dept...">
+                                </div>
+
+                                <!-- Sort Name -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sort Name</label>
+                                    <select id="formerStaffSortByName" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm">
+                                        <option value="">Default</option>
+                                        <option value="az">A → Z</option>
+                                        <option value="za">Z → A</option>
+                                    </select>
+                                </div>
+
+                                <!-- Sort by Department -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sort by Department</label>
+                                    <select id="formerStaffSortByDept" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none text-sm">
+                                        <option value="">All Departments</option>
+                                        <option value="Core Subjects Department">Core Subjects Department</option>
+                                        <option value="Humanities Department">Humanities Department</option>
+                                        <option value="Languages Department">Languages Department</option>
+                                        <option value="Creative Arts Department">Creative Arts Department</option>
+                                        <option value="Technology Department">Technology Department</option>
+                                        <option value="Social Sciences Department">Social Sciences Department</option>
+                                        <option value="PE Department">PE Department</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Reset Filters Button -->
+                            <div class="flex justify-end">
+                                <button id="formerStaffResetFilters" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition text-sm font-semibold">
+                                    <i class="fas fa-redo"></i> Reset Filters
+                                </button>
+                            </div>
+                        </div>
+
                         <div id="formerStaffContainer" class="bg-white rounded-xl shadow-md overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
@@ -525,6 +682,7 @@
                             <option value="Technology Department">Technology Department</option>
                             <option value="Social Sciences Department">Social Sciences Department</option>
                             <option value="PE Department">PE Department</option>
+                            <option value="Site & Infrastructure Team">Site & Infrastructure Team</option>
                         </optgroup>
                     </select>
                 </div>
@@ -921,7 +1079,7 @@
 
             errorDiv.textContent = '';
             currentUser = fullName;
-            localStorage.setItem('currentUser', fullName);
+            localStorage.setItem('att_login', JSON.stringify({ username: fullName, expiry: Date.now() + (24 * 60 * 60 * 1000) }));
             await logActivity('Login', `${fullName} logged into the system`, 'Authentication');
             showDashboard();
         });
@@ -931,7 +1089,7 @@
                 await logActivity('Logout', `${currentUser} logged out of the system`, 'Authentication');
             }
             currentUser = null;
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('att_login');
             location.reload();
         });
 
@@ -961,7 +1119,8 @@
                 document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
                 document.getElementById(pageId).classList.remove('hidden');
 
-                if (pageId === 'staff') await renderStaffTable();
+                if (pageId === 'analytics') await renderAnalytics();
+                else if (pageId === 'staff') await renderStaffTable();
                 else if (pageId === 'actions') await renderActions();
                 else if (pageId === 'formerStaff') await renderFormerStaff();
                 else if (pageId === 'promotions') await renderPromotions();
@@ -996,6 +1155,50 @@
             container.appendChild(alert);
 
             setTimeout(() => alert.remove(), 4000);
+        }
+
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1515326883544174703/g5HFXWFhAwac5deOKlzO-vgdVVVwES04_tGzIkDULqFzABAn78uv-bwimLNPlZSzVQ6N';
+
+        function getDiscordWebhookUrl() {
+            return DISCORD_WEBHOOK_URL;
+        }
+
+        async function ensureDiscordWebhookUrl() {
+            return getDiscordWebhookUrl();
+        }
+
+        async function sendDiscordEmbed(title, description, color, fields = []) {
+            const webhookUrl = getDiscordWebhookUrl();
+            if (!webhookUrl) {
+                const configuredUrl = await ensureDiscordWebhookUrl();
+                if (!configuredUrl) return false;
+            }
+
+            try {
+                const response = await fetch(getDiscordWebhookUrl(), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title,
+                            description,
+                            color,
+                            fields,
+                            timestamp: new Date().toISOString(),
+                            footer: { text: 'Suffield Academy HR Management System' }
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Discord webhook returned ${response.status}`);
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Discord webhook error:', error);
+                return false;
+            }
         }
 
         // ============================================
@@ -1326,7 +1529,31 @@
                 const { data, error } = await sbClient.from('staff').select('*').order('full_name');
                 if (error) throw error;
 
-                const formerStaff = (data || []).filter(member => member.status === 'Former');
+                let formerStaff = (data || []).filter(member => member.status === 'Former');
+
+                // Search filter
+                const searchQuery = (document.getElementById('formerStaffSearch')?.value || '').trim().toLowerCase();
+                if (searchQuery) {
+                    formerStaff = formerStaff.filter(member => 
+                        (member.full_name || '').toLowerCase().includes(searchQuery)
+                        || (member.role || '').toLowerCase().includes(searchQuery)
+                        || (member.department || '').toLowerCase().includes(searchQuery)
+                    );
+                }
+
+                // Department filter
+                const deptFilter = document.getElementById('formerStaffSortByDept')?.value || '';
+                if (deptFilter) {
+                    formerStaff = formerStaff.filter(member => member.department === deptFilter);
+                }
+
+                // Sort by name
+                const nameSort = document.getElementById('formerStaffSortByName')?.value || '';
+                if (nameSort === 'az') {
+                    formerStaff.sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
+                } else if (nameSort === 'za') {
+                    formerStaff.sort((a, b) => (b.full_name || '').localeCompare(a.full_name || ''));
+                }
 
                 if (!formerStaff.length) {
                     tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No former staff members</td></tr>';
@@ -1359,6 +1586,18 @@
         document.getElementById('staffSortByRank').addEventListener('change', renderStaffTable);
         document.getElementById('staffSortByName').addEventListener('change', renderStaffTable);
         document.getElementById('staffSortByDept').addEventListener('change', renderStaffTable);
+
+        // Former Staff filter event listeners
+        document.getElementById('formerStaffSearch')?.addEventListener('input', renderFormerStaff);
+        document.getElementById('formerStaffSortByName')?.addEventListener('change', renderFormerStaff);
+        document.getElementById('formerStaffSortByDept')?.addEventListener('change', renderFormerStaff);
+
+        document.getElementById('formerStaffResetFilters')?.addEventListener('click', () => {
+            document.getElementById('formerStaffSearch').value = '';
+            document.getElementById('formerStaffSortByName').value = '';
+            document.getElementById('formerStaffSortByDept').value = '';
+            renderFormerStaff();
+        });
 
         document.getElementById('viewModeTable').addEventListener('click', () => {
             currentViewMode = 'table';
@@ -1622,6 +1861,17 @@
 
                 if (staffData) {
                     await logActivity('Create', `Recorded ${actionType} for ${staffData.full_name}`, 'Actions');
+                    await sendDiscordEmbed(
+                        'HR Action Recorded',
+                        `${actionType} recorded for ${staffData.full_name}`,
+                        0xef4444,
+                        [
+                            { name: 'Staff Member', value: staffData.full_name, inline: true },
+                            { name: 'Action Type', value: actionType, inline: true },
+                            { name: 'Reason', value: document.getElementById('punishmentReason').value || 'N/A', inline: false },
+                            { name: 'Date', value: document.getElementById('punishmentDate').value || 'N/A', inline: true }
+                        ]
+                    );
                 }
 
                 showAlert('actionsAlert', `${actionType} recorded!`, 'success');
@@ -1638,47 +1888,44 @@
         function getActionStyle(type) {
             const styles = {
                 'Reminder': {
-                    wrapper: 'bg-emerald-50 text-emerald-900',
                     badge: 'bg-emerald-100 text-emerald-800',
-                    borderStyle: 'border-left: 4px solid #34d399;'
+                    borderColor: '#34d399'
                 },
                 'Formal Warning': {
-                    wrapper: 'bg-yellow-50 text-yellow-900',
                     badge: 'bg-yellow-100 text-yellow-800',
-                    borderStyle: 'border-left: 4px solid #facc15;'
+                    borderColor: '#facc15'
                 },
                 'Strike': {
-                    wrapper: 'bg-orange-50 text-orange-900',
                     badge: 'bg-orange-100 text-orange-800',
-                    borderStyle: 'border-left: 4px solid #fb923c;'
+                    borderColor: '#fb923c'
                 },
                 'Suspension': {
-                    wrapper: 'bg-red-50 text-red-900',
                     badge: 'bg-red-100 text-red-800',
-                    borderStyle: 'border-left: 4px solid #f87171;'
+                    borderColor: '#f87171'
                 },
                 'Demotion': {
-                    wrapper: 'bg-indigo-50 text-indigo-900',
                     badge: 'bg-indigo-100 text-indigo-800',
-                    borderStyle: 'border-left: 4px solid #6366f1;'
+                    borderColor: '#6366f1'
                 },
                 'Termination': {
-                    wrapper: 'bg-red-100 text-red-900',
                     badge: 'bg-red-200 text-red-900',
-                    borderStyle: 'border-left: 4px solid #ef4444;'
+                    borderColor: '#ef4444'
                 },
                 'Resignation': {
-                    wrapper: 'bg-yellow-50 text-yellow-900',
                     badge: 'bg-yellow-200 text-yellow-900',
-                    borderStyle: 'border-left: 4px solid #f59e0b;'
+                    borderColor: '#f59e0b'
                 },
                 'Staff Blacklist': {
-                    wrapper: 'bg-gray-900 text-white',
                     badge: 'bg-black text-white',
-                    borderStyle: 'border-left: 4px solid #000000;'
+                    borderColor: '#000000'
                 }
             };
-            return styles[type] || { wrapper: 'bg-white text-gray-900', badge: 'bg-gray-100 text-gray-800', borderStyle: 'border-left: 4px solid #cbd5e1;' };
+            return styles[type] || { badge: 'bg-gray-100 text-gray-800', borderColor: '#cbd5e1' };
+        }
+
+        function getBorderColorForActionType(type) {
+            const style = getActionStyle(type);
+            return style.borderColor;
         }
 
         async function renderActions() {
@@ -1698,8 +1945,47 @@
                     return;
                 }
 
+                // Apply filters
+                let filtered = punishments;
+
+                // Search filter
+                const searchQuery = (document.getElementById('actionsSearch')?.value || '').trim().toLowerCase();
+                if (searchQuery) {
+                    filtered = filtered.filter(p => {
+                        const member = staff?.find(s => s.id == p.staff_id);
+                        return (member?.full_name || '').toLowerCase().includes(searchQuery)
+                            || (p.reason || '').toLowerCase().includes(searchQuery)
+                            || (p.notes || '').toLowerCase().includes(searchQuery)
+                            || (p.type || '').toLowerCase().includes(searchQuery);
+                    });
+                }
+
+                // Type filter
+                const typeFilter = document.getElementById('actionsFilterType')?.value || '';
+                if (typeFilter) {
+                    filtered = filtered.filter(p => p.type === typeFilter);
+                }
+
+                // Date range filter
+                const startDate = document.getElementById('actionsStartDate')?.value;
+                const endDate = document.getElementById('actionsEndDate')?.value;
+                if (startDate) {
+                    const start = new Date(startDate);
+                    filtered = filtered.filter(p => new Date(p.date) >= start);
+                }
+                if (endDate) {
+                    const end = new Date(endDate);
+                    end.setHours(23, 59, 59, 999);
+                    filtered = filtered.filter(p => new Date(p.date) <= end);
+                }
+
+                if (filtered.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-8">No actions match filters</p>';
+                    return;
+                }
+
                 const grouped = {};
-                punishments.forEach(p => {
+                filtered.forEach(p => {
                     if (!grouped[p.staff_id]) grouped[p.staff_id] = [];
                     grouped[p.staff_id].push(p);
                 });
@@ -1717,14 +2003,14 @@
                     grouped[staffId].forEach(p => {
                         const style = getActionStyle(p.type);
                         html += `
-                            <div class="${style.wrapper} p-4 rounded-lg" style="${style.borderStyle}">
+                            <div class="bg-white border-l-4 p-4 rounded-lg" style="border-left-color: ${getBorderColorForActionType(p.type)}">
                                 <div class="flex justify-between items-start gap-4">
                                     <div class="flex-1">
-                                        <p class="font-bold ${p.type === 'Staff Blacklist' ? 'text-white' : 'text-gray-900'}">${p.type}</p>
+                                        <p class="font-bold text-gray-900">${p.type}</p>
                                         <span class="inline-flex items-center ${style.badge} px-2 py-1 rounded-full text-xs font-semibold mt-2">${p.type}</span>
-                                        <p class="text-gray-600 text-sm mt-3">${p.reason}</p>
-                                        <p class="text-gray-500 text-xs mt-2">Date: ${p.date}</p>
-                                        <p class="text-gray-500 text-xs mt-1">${p.notes || ''}</p>
+                                        <p class="text-gray-600 text-sm mt-3"><strong>Reason:</strong> ${p.reason}</p>
+                                        ${p.notes ? `<p class="text-gray-600 text-sm mt-2"><strong>Notes:</strong> ${p.notes}</p>` : ''}
+                                        <p class="text-gray-500 text-xs mt-3">Date: ${p.date}</p>
                                     </div>
                                     <button onclick="deletePunishment('${p.id}')" class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-trash"></i>
@@ -1759,6 +2045,20 @@
                 showAlert('actionsAlert', 'Error: ' + error.message, 'error');
             }
         }
+
+        // Actions filter event listeners
+        document.getElementById('actionsSearch')?.addEventListener('input', renderActions);
+        document.getElementById('actionsFilterType')?.addEventListener('change', renderActions);
+        document.getElementById('actionsStartDate')?.addEventListener('change', renderActions);
+        document.getElementById('actionsEndDate')?.addEventListener('change', renderActions);
+
+        document.getElementById('actionsResetFilters')?.addEventListener('click', () => {
+            document.getElementById('actionsSearch').value = '';
+            document.getElementById('actionsFilterType').value = '';
+            document.getElementById('actionsStartDate').value = '';
+            document.getElementById('actionsEndDate').value = '';
+            renderActions();
+        });
 
         // ============================================
         // PROMOTIONS
@@ -1813,6 +2113,18 @@
 
                 if (staffData) {
                     await logActivity('Create', `Promoted ${staffData.full_name} to ${newRole}`, 'Promotions');
+                    await sendDiscordEmbed(
+                        'Promotion Recorded',
+                        `${staffData.full_name} moved to ${newRole}`,
+                        0x3b82f6,
+                        [
+                            { name: 'Staff Member', value: staffData.full_name, inline: true },
+                            { name: 'Previous Role', value: document.getElementById('promotionPreviousRole').value || 'N/A', inline: true },
+                            { name: 'New Role', value: newRole, inline: true },
+                            { name: 'Date', value: document.getElementById('promotionDate').value || 'N/A', inline: true },
+                            { name: 'Reason', value: document.getElementById('promotionNotes').value || 'No note provided', inline: false }
+                        ]
+                    );
                 }
 
                 showAlert('promotionsAlert', 'Promotion recorded!', 'success');
@@ -1924,6 +2236,18 @@
 
                 if (staffData) {
                     await logActivity('Create', `Added lesson observation for ${staffData.full_name} - Rating: ${rating}`, 'Lesson Observations');
+                    await sendDiscordEmbed(
+                        'Lesson Observation Recorded',
+                        `${staffData.full_name} received a ${rating} lesson observation`,
+                        0x8b5cf6,
+                        [
+                            { name: 'Staff Member', value: staffData.full_name, inline: true },
+                            { name: 'Observer', value: document.getElementById('observationObserver').value || 'N/A', inline: true },
+                            { name: 'Rating', value: rating, inline: true },
+                            { name: 'Date', value: document.getElementById('observationDate').value || 'N/A', inline: true },
+                            { name: 'Comments', value: document.getElementById('observationComments').value || 'No comments provided', inline: false }
+                        ]
+                    );
                 }
 
                 showAlert('observationsAlert', 'Observation recorded!', 'success');
@@ -2053,6 +2377,18 @@
 
                 if (staffData) {
                     await logActivity('Create', `Recorded ${loaType} leave for ${staffData.full_name}`, 'Leave of Absence');
+                    await sendDiscordEmbed(
+                        'Leave of Absence Recorded',
+                        `${staffData.full_name} has a ${loaType} leave request on record`,
+                        0xf59e0b,
+                        [
+                            { name: 'Staff Member', value: staffData.full_name, inline: true },
+                            { name: 'Leave Type', value: loaType, inline: true },
+                            { name: 'Start Date', value: document.getElementById('loaStartDate').value || 'N/A', inline: true },
+                            { name: 'End Date', value: document.getElementById('loaEndDate').value || 'N/A', inline: true },
+                            { name: 'Reason', value: document.getElementById('loaReason').value || 'No reason provided', inline: false }
+                        ]
+                    );
                 }
 
                 showAlert('loaAlert', 'Leave recorded!', 'success');
@@ -2092,14 +2428,21 @@
                     current.forEach(l => {
                         const member = staff?.find(s => s.id === l.staff_id);
                         html += `
-                            <div class="bg-yellow-50 p-4 rounded-lg flex justify-between items-start">
-                                <div>
+                            <div class="bg-white border-l-4 border-yellow-500 p-4 rounded-lg flex justify-between items-start">
+                                <div class="flex-1">
                                     <p class="font-bold text-gray-900">${member?.full_name}</p>
                                     <p class="text-yellow-700 text-sm mt-1">${l.type} • ${l.start_date} to ${l.end_date}</p>
+                                    ${l.reason ? `<p class="text-gray-700 text-sm mt-2"><strong>Reason:</strong> ${l.reason}</p>` : ''}
+                                    ${l.notes ? `<p class="text-gray-600 text-sm mt-2"><strong>Notes:</strong> ${l.notes}</p>` : ''}
+                                    <div class="flex gap-2 mt-3">
+                                        <button onclick="endLoaEarly('${l.id}')" class="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white text-sm rounded transition">
+                                            <i class="fas fa-stop-circle"></i> End Early
+                                        </button>
+                                        <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
-                                    <i class="fas fa-trash"></i>
-                                </button>
                             </div>
                         `;
                     });
@@ -2114,14 +2457,18 @@
                     upcoming.forEach(l => {
                         const member = staff?.find(s => s.id === l.staff_id);
                         html += `
-                            <div class="bg-blue-50 p-4 rounded-lg flex justify-between items-start">
-                                <div>
+                            <div class="bg-white border-l-4 border-blue-500 p-4 rounded-lg flex justify-between items-start">
+                                <div class="flex-1">
                                     <p class="font-bold text-gray-900">${member?.full_name}</p>
                                     <p class="text-blue-700 text-sm mt-1">${l.type} • ${l.start_date} to ${l.end_date}</p>
+                                    ${l.reason ? `<p class="text-gray-700 text-sm mt-2"><strong>Reason:</strong> ${l.reason}</p>` : ''}
+                                    ${l.notes ? `<p class="text-gray-600 text-sm mt-2"><strong>Notes:</strong> ${l.notes}</p>` : ''}
+                                    <div class="flex gap-2 mt-3">
+                                        <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <button onclick="deleteLOA('${l.id}')" class="text-red-600 hover:text-red-800">
-                                    <i class="fas fa-trash"></i>
-                                </button>
                             </div>
                         `;
                     });
@@ -2146,6 +2493,25 @@
                 await logActivity('Delete', 'Deleted leave of absence record', 'Leave of Absence');
                 await renderLOA();
                 await updateDashboardStats();
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('loaAlert', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        async function endLoaEarly(id) {
+            if (!confirm('End this leave of absence early?')) return;
+            if (!sbClient) return;
+
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const { error } = await sbClient.from('leave_of_absence').update({ end_date: today }).eq('id', id);
+                if (error) throw error;
+                
+                await logActivity('Update', 'Ended leave of absence early', 'Leave of Absence');
+                await renderLOA();
+                await updateDashboardStats();
+                showAlert('loaAlert', 'Leave ended early', 'success');
             } catch (error) {
                 console.error('Error:', error);
                 showAlert('loaAlert', 'Error: ' + error.message, 'error');
@@ -2188,6 +2554,17 @@
 
                 if (staffData) {
                     await logActivity('Create', `Awarded ${awardType} to ${staffData.full_name}`, 'Awards & Praise');
+                    await sendDiscordEmbed(
+                        'Award / Praise Recorded',
+                        `${staffData.full_name} received ${awardType}`,
+                        0xfbbf24,
+                        [
+                            { name: 'Staff Member', value: staffData.full_name, inline: true },
+                            { name: 'Award Type', value: awardType, inline: true },
+                            { name: 'Date', value: document.getElementById('awardDate').value || 'N/A', inline: true },
+                            { name: 'Reason', value: document.getElementById('awardReason').value || 'No reason provided', inline: false }
+                        ]
+                    );
                 }
 
                 showAlert('awardsAlert', 'Award recorded!', 'success');
@@ -2286,6 +2663,101 @@
             }
         }
 
+        async function renderAnalytics() {
+            if (!sbClient) {
+                document.getElementById('analyticsDepartmentList').innerHTML = '<p class="text-gray-500">Connection unavailable.</p>';
+                return;
+            }
+
+            try {
+                const [{ data: staff = [] }, { data: punishments = [] }, { data: promotions = [] }] = await Promise.all([
+                    sbClient.from('staff').select('*'),
+                    sbClient.from('punishments').select('*'),
+                    sbClient.from('promotions').select('*')
+                ]);
+
+                const activeStaff = (staff || []).filter(member => (member.status || 'Active') !== 'Former');
+                const today = new Date();
+                const weekStart = new Date(today);
+                weekStart.setDate(today.getDate() - 7);
+                const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+                const punishmentsThisWeek = (punishments || []).filter(item => new Date(item.date) >= weekStart && new Date(item.date) <= today);
+                const punishmentsThisMonth = (punishments || []).filter(item => new Date(item.date) >= monthStart && new Date(item.date) <= today);
+                const promotionsThisWeek = (promotions || []).filter(item => new Date(item.date) >= weekStart && new Date(item.date) <= today);
+
+                const departmentMap = activeStaff.reduce((acc, member) => {
+                    const department = member.department || 'Unassigned';
+                    acc[department] = (acc[department] || 0) + 1;
+                    return acc;
+                }, {});
+
+                const departmentEntries = Object.entries(departmentMap).sort((a, b) => b[1] - a[1]);
+                const totalDepartmentCount = departmentEntries.length;
+                const highestDepartment = departmentEntries[0]?.[0] || 'None';
+                const highestDepartmentValue = departmentEntries[0]?.[1] || 0;
+
+                document.getElementById('analyticsActiveStaff').textContent = activeStaff.length;
+                document.getElementById('analyticsPunishmentsWeek').textContent = punishmentsThisWeek.length;
+                document.getElementById('analyticsPunishmentsMonth').textContent = punishmentsThisMonth.length;
+                document.getElementById('analyticsPromotionsWeek').textContent = promotionsThisWeek.length;
+                document.getElementById('analyticsCoverageLabel').textContent = `${totalDepartmentCount} departments`;
+                document.getElementById('analyticsTotalActions').textContent = (punishments || []).length;
+                document.getElementById('analyticsTotalPromotions').textContent = (promotions || []).length;
+
+                const departmentList = document.getElementById('analyticsDepartmentList');
+                departmentList.innerHTML = departmentEntries.length
+                    ? departmentEntries.map(([name, count]) => {
+                        const percentage = Math.round((count / Math.max(activeStaff.length, 1)) * 100);
+                        return `
+                            <div class="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-semibold text-gray-900">${name}</span>
+                                    <span class="text-sm text-gray-600">${count} staff</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-2.5 rounded-full" style="width: ${percentage}%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">${percentage}% of active staff</p>
+                            </div>
+                        `;
+                      }).join('')
+                    : '<p class="text-gray-500">No department data available yet.</p>';
+
+                const aiReport = document.getElementById('analyticsAIReport');
+                const recommendations = document.getElementById('analyticsRecommendations');
+
+                const actionTrend = punishmentsThisMonth.length - punishmentsThisWeek.length;
+                const promotionTrend = promotionsThisWeek.length;
+                const aiSummary = [
+                    `Leadership coverage is strongest in ${highestDepartment} with ${highestDepartmentValue} active staff members.`,
+                    punishmentsThisWeek.length > 0
+                        ? `There were ${punishmentsThisWeek.length} actions recorded in the last 7 days; monitor repeat patterns for coaching support.`
+                        : 'No disciplinary actions were recorded in the last 7 days, which is a positive signal for staff stability.',
+                    promotionTrend > 0
+                        ? `This week shows ${promotionTrend} promotion milestone${promotionTrend === 1 ? '' : 's'}; keep succession planning visible for key roles.`
+                        : 'No promotions were recorded this week. Use the dashboard to highlight upcoming leadership opportunities.',
+                    actionTrend > 0
+                        ? 'Monthly action volume is trending upward, so team support and policy reminders should be reviewed.'
+                        : 'Monthly action volume is stable; focus on recognition and development to maintain morale.'
+                ];
+
+                aiReport.innerHTML = aiSummary.map(item => `
+                    <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-gray-700">${item}</div>
+                `).join('');
+
+                const recItems = [
+                    highestDepartmentValue > 0 ? `Prioritize development support in ${highestDepartment} where the largest group of staff is based.` : 'Add more staffing records to build a stronger department view.',
+                    punishmentsThisMonth.length > 0 ? 'Review repeat action patterns and schedule coaching check-ins for affected teams.' : 'Use recognition and praise to reinforce strong staff performance.',
+                    promotionsThisWeek.length > 0 ? 'Celebrate recent promotions and share the update in leadership communications.' : 'Identify one or two staff members ready for role progression this month.'
+                ];
+
+                recommendations.innerHTML = recItems.map(item => `<li class="rounded-lg border border-gray-100 bg-gray-50 p-3">${item}</li>`).join('');
+            } catch (error) {
+                console.error('Error rendering analytics:', error);
+            }
+        }
+
         async function updateRecentActivity() {
             if (!sbClient) return;
 
@@ -2330,6 +2802,32 @@
             const d = new Date(val);
             if (isNaN(d)) return null;
             return d;
+        }
+
+        function getActivityLogBorderColor(action, module) {
+            // Color based on module/action
+            const colorMap = {
+                'Staff Management': '#34d399',
+                'Actions': '#ef4444',
+                'Promotions': '#3b82f6',
+                'Lesson Observations': '#8b5cf6',
+                'Leave of Absence': '#f59e0b',
+                'Awards & Praise': '#f59e0b',
+                'Authentication': '#06b6d4',
+                'Delete': '#dc2626',
+                'Create': '#10b981',
+                'Update': '#f59e0b',
+                'General': '#6b7280'
+            };
+            
+            // Check module first
+            if (colorMap[module]) return colorMap[module];
+            
+            // Check action if module not found
+            if (colorMap[action]) return colorMap[action];
+            
+            // Default color
+            return '#cbd5e1';
         }
 
         async function renderActivityLog() {
@@ -2410,8 +2908,9 @@
                 let html = `<div class="space-y-3">`;
                 filtered.forEach(log => {
                     const time = new Date(log.timestamp).toLocaleString();
+                    const borderColor = getActivityLogBorderColor(log.action, log.module);
                     html += `
-                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4" style="border-left-color: ${borderColor}">
                             <div>
                                 <p class="font-semibold text-gray-900">[${log.module || 'General'}] ${log.action}</p>
                                 <p class="text-gray-600 text-sm mt-1">${log.details || ''}</p>
@@ -2499,11 +2998,18 @@
         window.addEventListener('load', async () => {
             initSupabase();
 
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser && sbClient) {
-                currentUser = savedUser;
-                showDashboard();
-            }
+            try {
+                const raw = localStorage.getItem('att_login');
+                if (raw) {
+                    const obj = JSON.parse(raw);
+                    if (obj && obj.username && obj.expiry && Date.now() <= obj.expiry) {
+                        currentUser = obj.username;
+                        showDashboard();
+                    } else {
+                        localStorage.removeItem('att_login');
+                    }
+                }
+            } catch (e) { localStorage.removeItem('att_login'); }
 
             await updateStaffSelects();
         });
